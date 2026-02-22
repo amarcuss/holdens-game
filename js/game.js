@@ -95,6 +95,27 @@ class Game {
     Projectiles.clear();
   }
 
+  returnToHub() {
+    this.state = STATE.PLAYING;
+    DungeonMap.currentRoom = 15;
+    const hubRoom = DungeonMap.getRoom();
+    const savedCoins = this.player ? this.player.coins : 0;
+    const savedSword = Inventory.equippedSword;
+    const savedArmor = Inventory.equippedArmor;
+    this.player = new Player(hubRoom.playerStart.x, hubRoom.playerStart.y);
+    this.player.coins = savedCoins;
+    Inventory.equippedSword = savedSword;
+    Inventory.equippedArmor = savedArmor;
+    this.player.attack = PLAYER_BASE_ATK + Inventory.getAttackBonus();
+    this.player.defense = PLAYER_BASE_DEF + Inventory.getDefenseBonus();
+    this.particles = [];
+    this.clearedRooms = new Set();
+    this.enemies = [];
+    this.coins = [];
+    Combat.clear();
+    Projectiles.clear();
+  }
+
   spawnRoom() {
     this.enemies = [];
     this.coins = [];
@@ -360,7 +381,11 @@ class Game {
 
     if (this.state === STATE.GAME_OVER) {
       if (Input.wasPressed('Enter')) {
-        this.startNewGame();
+        if (this.currentDungeon.startRoom === 0) {
+          this.startNewGame();
+        } else {
+          this.returnToHub();
+        }
       }
     }
 
