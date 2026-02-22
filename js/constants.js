@@ -84,6 +84,7 @@ const STATE = {
   SHOP: 'SHOP',
   GAME_OVER: 'GAME_OVER',
   TRANSITION: 'TRANSITION',
+  BESTIARY: 'BESTIARY',
 };
 
 // Directions

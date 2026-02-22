@@ -133,6 +133,9 @@ const Sprites = {
       'R': '#8e44ad', 'P': '#5b2c6f', 'O': COLORS.SHOE, '.': null,
     });
 
+    // --- Book icon ---
+    this._initBook();
+
     // --- Floor tile ---
     this.floor = this._makeFloor();
 
@@ -374,6 +377,30 @@ const Sprites = {
     this.bruteLeft = this.bruteDown;
     this.bruteRight = this.bruteDown;
     this.bruteSprites = [this.bruteUp, this.bruteDown, this.bruteLeft, this.bruteRight];
+  },
+
+  _initBook() {
+    this.book = this._parse([
+      '................',
+      '..BBBBBBBBBB....',
+      '..BCCCCCCCCCB...',
+      '..BCCCCCCCCCCB..',
+      '..BCCCCCCCCCGB..',
+      '..BCCCCCCCCCCB..',
+      '..BCCCCCCCCCGB..',
+      '..BCCCCCCCCCCB..',
+      '..BCCCCCCCCCGB..',
+      '..BCCCCCCCCCCB..',
+      '..BCCCCCCCCCGB..',
+      '..BCCCCCCCCCCB..',
+      '..BDDDDDDDDDB..',
+      '..BBBBBBBBBBBB..',
+      '................',
+      '................',
+    ], {
+      'B': '#6b3a1a', 'C': '#f5e6c8', 'D': '#8b5a2a',
+      'G': '#d4a017', '.': null,
+    });
   },
 
   _makeFloor() {

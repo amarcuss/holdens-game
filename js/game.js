@@ -54,6 +54,8 @@ class Game {
     this.spawnRoom();
     Combat.clear();
     Projectiles.clear();
+    Bestiary.init();
+    Bestiary.reset();
   }
 
   spawnRoom() {
@@ -148,6 +150,14 @@ class Game {
       return;
     }
 
+    if (this.state === STATE.BESTIARY) {
+      Bestiary.update(dt);
+      if (!Bestiary.open) {
+        this.state = STATE.PLAYING;
+      }
+      return;
+    }
+
     if (this.state === STATE.PLAYING) {
       this.player.update(dt);
 
@@ -168,6 +178,7 @@ class Game {
         if (!enemy.alive && !enemy._droppedCoins) {
           enemy._droppedCoins = true;
           this.enemiesSlain++;
+          Bestiary.recordKill(enemy.type);
           const config = Enemy.TYPES[enemy.type];
           const count = config.coinDrop.min +
             Math.floor(Math.random() * (config.coinDrop.max - config.coinDrop.min + 1));
@@ -241,6 +252,15 @@ class Game {
         this.shake(6, 0.4);
         Combat.clear();
         return;
+      }
+
+      // Bestiary icon glow timer
+      Bestiary.updateIcon(dt);
+
+      // Open bestiary
+      if (Input.wasPressed('KeyB')) {
+        this.state = STATE.BESTIARY;
+        Bestiary.show();
       }
 
       // Shopkeeper interaction
@@ -338,7 +358,7 @@ class Game {
     }
 
     if (this.state === STATE.PLAYING || this.state === STATE.SHOP ||
-        this.state === STATE.GAME_OVER || this.transitioning) {
+        this.state === STATE.GAME_OVER || this.state === STATE.BESTIARY || this.transitioning) {
       // Draw room
       DungeonMap.drawRoom(ctx, this.camera);
 
@@ -404,6 +424,10 @@ class Game {
       Shop.draw(ctx);
     }
 
+    if (this.state === STATE.BESTIARY) {
+      Bestiary.draw(ctx);
+    }
+
     if (this.state === STATE.GAME_OVER) {
       this.drawGameOver(ctx);
     }
@@ -463,7 +487,7 @@ class Game {
     // Controls info
     ctx.fillStyle = '#555';
     ctx.font = '12px monospace';
-    ctx.fillText('Arrow Keys: Move | Space: Attack | Enter: Interact', CANVAS_W / 2, 420);
+    ctx.fillText('Arrows: Move | Space: Attack | Enter: Interact | B: Bestiary', CANVAS_W / 2, 420);
 
     ctx.textAlign = 'left';
   }

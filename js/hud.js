@@ -53,6 +53,9 @@ const HUD = {
       ctx.fillText('DEF:' + player.defense, CANVAS_W / 2 + 50, eqY);
     }
 
+    // Book icon
+    Bestiary.drawIcon(ctx);
+
     ctx.textAlign = 'left';
   },
 
