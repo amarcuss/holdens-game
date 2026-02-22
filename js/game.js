@@ -35,6 +35,9 @@ class Game {
     // Track which rooms have been cleared of enemies
     this.clearedRooms = new Set();
 
+    // Track which story scenes have been played
+    this.playedScenes = new Set();
+
     // Title screen animation
     this.titleTimer = 0;
 
@@ -51,6 +54,7 @@ class Game {
     this.enemiesSlain = 0;
     this.particles = [];
     this.clearedRooms = new Set();
+    this.playedScenes = new Set();
     this.spawnRoom();
     Combat.clear();
     Projectiles.clear();
@@ -131,8 +135,14 @@ class Game {
 
     if (this.state === STATE.TITLE) {
       if (Input.wasPressed('Enter')) {
-        this.startNewGame();
+        this.state = STATE.STORY;
+        Story.play('intro', () => this.startNewGame());
       }
+      return;
+    }
+
+    if (this.state === STATE.STORY) {
+      Story.update(dt);
       return;
     }
 
@@ -332,6 +342,14 @@ class Game {
         this.transitioning = false;
         this.transitionPhase = 'none';
         this.pendingDoor = null;
+
+        // Trigger story scene on first visit to a room
+        const sceneKey = ROOM_STORIES[DungeonMap.currentRoom];
+        if (sceneKey && !this.playedScenes.has(sceneKey)) {
+          this.playedScenes.add(sceneKey);
+          this.state = STATE.STORY;
+          Story.play(sceneKey, () => { this.state = STATE.PLAYING; });
+        }
       }
     }
   }
@@ -346,6 +364,11 @@ class Game {
 
     if (this.state === STATE.TITLE) {
       this.drawTitle(ctx);
+      return;
+    }
+
+    if (this.state === STATE.STORY) {
+      Story.draw(ctx);
       return;
     }
 

@@ -85,6 +85,123 @@ const STATE = {
   GAME_OVER: 'GAME_OVER',
   TRANSITION: 'TRANSITION',
   BESTIARY: 'BESTIARY',
+  STORY: 'STORY',
+};
+
+// Story scenes — each scene is an array of pages, each page is an array of lines
+const STORY_SCENES = {
+  intro: [
+    [
+      'You wake on cold stone.',
+      'Head throbbing, hands scraped.',
+      'No memory of how you got here.',
+    ],
+    [
+      'Damp air, something shifting',
+      'in the dark. A rusty sword',
+      'at your hip — it\'ll have to do.',
+    ],
+    [
+      'Only one way out:',
+      'forward, into the dungeon.',
+    ],
+  ],
+  great_hall: [
+    [
+      'The ceiling stretches upward',
+      'into darkness. Pillars cast',
+      'long, crooked shadows.',
+    ],
+    [
+      'Something rattles deeper in.',
+      'Bones. Walking bones.',
+      'They don\'t seem friendly.',
+    ],
+  ],
+  treasury: [
+    [
+      'A weathered figure hunches',
+      'beside a makeshift stall,',
+      'torchlight catching worn coins.',
+    ],
+    [
+      '"Coins for gear, gear for',
+      'survival." He doesn\'t look up.',
+    ],
+    [
+      'At least someone else',
+      'is alive down here.',
+    ],
+  ],
+  depths: [
+    [
+      'The air grows thick and warm.',
+      'Passages branch in every',
+      'direction — a crossroads.',
+    ],
+    [
+      'Scratching echoes from all',
+      'sides. The dungeon is waking up.',
+    ],
+  ],
+  crypt: [
+    [
+      'Rows of stone coffins line',
+      'the walls. Some lids have',
+      'been pushed aside.',
+    ],
+    [
+      'The dead don\'t rest easy here.',
+    ],
+  ],
+  armory: [
+    [
+      'Rusted weapon racks cling',
+      'to the walls. Whoever built',
+      'this place was ready for war.',
+    ],
+    [
+      'Arrows whistle from the dark.',
+      'Something in here can aim.',
+    ],
+  ],
+  antechamber: [
+    [
+      'Grand stonework. Carved pillars.',
+      'This was important once.',
+    ],
+    [
+      'A low rumble echoes',
+      'from beyond the far door.',
+      'Something is waiting.',
+    ],
+  ],
+  throne: [
+    [
+      'A vast chamber. Cracked',
+      'throne at the far end,',
+      'draped in cobwebs.',
+    ],
+    [
+      'The ground trembles.',
+      'A hulking shape rises',
+      'from the shadows.',
+    ],
+    [
+      'No turning back now.',
+    ],
+  ],
+};
+
+// Map room indices to story scene keys (played on first entry)
+const ROOM_STORIES = {
+  2: 'great_hall',
+  3: 'treasury',
+  4: 'depths',
+  6: 'crypt',
+  8: 'armory',
+  13: 'antechamber',
+  14: 'throne',
 };
 
 // Directions
