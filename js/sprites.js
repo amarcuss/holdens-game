@@ -391,23 +391,23 @@ const Sprites = {
       'E': COLORS.FROST_EYE, '.': null,
     };
 
-    // Diamond-shaped crystalline sprite (same all directions — it floats)
+    // Crystal rock creature (same all directions)
     this.frostSpriteDown = this._parse([
+      '.......CC.......',
+      '......CBBC......',
+      '.....CLBBLD.....',
+      '.....LBBBBD.....',
+      '....CLBBBBLD....',
+      '...DDBBBBBBDD...',
+      '..DDBBBBBBBBDD..',
+      '..DBBBBCCBBBBD..',
+      '..DDBBBBBBBBDD..',
+      '...DDBBBBBBDD...',
+      '..DD..DBBD..DD..',
+      '.DD...DBBD...DD.',
+      '.D....D..D....D.',
       '................',
-      '.......LL.......',
-      '......LLLL......',
-      '.....LLBBLL.....',
-      '....LLBBBBLL....',
-      '...LLBBBBBBLL...',
-      '...LBBBCCBBBL...',
-      '..LLBBCEECBBLL..',
-      '..LLBBCEECBBLL..',
-      '...LBBBCCBBBL...',
-      '...LLBBBBBBLL...',
-      '....LLBBBBLL....',
-      '.....LLBBLL.....',
-      '......DDDD......',
-      '.......DD.......',
+      '................',
       '................',
     ], pal);
 
