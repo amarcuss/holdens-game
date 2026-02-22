@@ -4,12 +4,16 @@ const Combat = {
   // Player attacks the nearest enemy within 1 tile
   playerAttack(player, enemies) {
     // Find nearest alive enemy within 1 tile (including diagonals)
+    // For multi-tile enemies, check distance from player to nearest occupied tile
     let closest = null;
     let closestDist = Infinity;
     for (const enemy of enemies) {
       if (!enemy.alive) continue;
-      const dx = Math.abs(enemy.tileX - player.tileX);
-      const dy = Math.abs(enemy.tileY - player.tileY);
+      // Find nearest tile of this enemy to the player
+      const nearX = Math.max(enemy.tileX, Math.min(player.tileX, enemy.tileX + enemy.tileW - 1));
+      const nearY = Math.max(enemy.tileY, Math.min(player.tileY, enemy.tileY + enemy.tileH - 1));
+      const dx = Math.abs(nearX - player.tileX);
+      const dy = Math.abs(nearY - player.tileY);
       if (dx <= 1 && dy <= 1 && (dx + dy > 0)) {
         const dist = dx + dy;
         if (dist < closestDist) {
@@ -35,11 +39,14 @@ const Combat = {
       return false;
     }
 
-    const targetX = closest.tileX;
-    const targetY = closest.tileY;
+    // For multi-tile: find the nearest tile of the enemy to the player for slash effects
+    const nearX = Math.max(closest.tileX, Math.min(player.tileX, closest.tileX + closest.tileW - 1));
+    const nearY = Math.max(closest.tileY, Math.min(player.tileY, closest.tileY + closest.tileH - 1));
+    const targetX = nearX;
+    const targetY = nearY;
 
-    // Red target box around the enemy
-    this.addTargetBox(targetX, targetY);
+    // Red target box around the enemy (covers full footprint)
+    this.addTargetBox(closest.tileX, closest.tileY, closest.tileW, closest.tileH);
 
     // Slash effect at the enemy tile
     this.addSlashEffect(player, targetX, targetY);
@@ -53,20 +60,34 @@ const Combat = {
     this.addHitSparks(targetX, targetY);
 
     // Knockback: push enemy away from player (cardinal only)
-    let kbDx = Math.sign(targetX - player.tileX);
-    let kbDy = Math.sign(targetY - player.tileY);
+    // Use nearest tile for knockback direction
+    let kbDx = Math.sign(nearX - player.tileX);
+    let kbDy = Math.sign(nearY - player.tileY);
     // For diagonal hits, pick the dominant axis
     if (kbDx !== 0 && kbDy !== 0) {
-      if (Math.abs(targetX - player.tileX) >= Math.abs(targetY - player.tileY)) {
+      if (Math.abs(nearX - player.tileX) >= Math.abs(nearY - player.tileY)) {
         kbDy = 0;
       } else {
         kbDx = 0;
       }
     }
     if (kbDx !== 0 || kbDy !== 0) {
-      const kbX = closest.tileX + kbDx;
-      const kbY = closest.tileY + kbDy;
-      if (DungeonMap.isWalkable(kbX, kbY) && !this._isEnemyAt(kbX, kbY, enemies)) {
+      // Check all new tiles in footprint that the entity would move into
+      let canKnockback = true;
+      for (let oy = 0; oy < closest.tileH; oy++) {
+        for (let ox = 0; ox < closest.tileW; ox++) {
+          const checkX = closest.tileX + kbDx + ox;
+          const checkY = closest.tileY + kbDy + oy;
+          // Skip tiles already occupied by this enemy
+          if (closest.occupiesTile(checkX, checkY)) continue;
+          if (!DungeonMap.isWalkable(checkX, checkY) || this._isEnemyAt(checkX, checkY, enemies)) {
+            canKnockback = false;
+            break;
+          }
+        }
+        if (!canKnockback) break;
+      }
+      if (canKnockback) {
         closest.startMove(kbDx, kbDy);
       }
     }
@@ -101,11 +122,13 @@ const Combat = {
     });
   },
 
-  addTargetBox(tileX, tileY) {
+  addTargetBox(tileX, tileY, tileW, tileH) {
     this.effects.push({
       type: 'targetbox',
       x: tileX * TILE,
       y: tileY * TILE,
+      w: (tileW || 1) * TILE,
+      h: (tileH || 1) * TILE,
       timer: 0,
       duration: 0.3,
     });
@@ -141,7 +164,7 @@ const Combat = {
 
   _isEnemyAt(x, y, enemies) {
     for (const e of enemies) {
-      if (e.alive && e.tileX === x && e.tileY === y) return true;
+      if (e.alive && e.occupiesTile(x, y)) return true;
     }
     return false;
   },
@@ -241,17 +264,19 @@ const Combat = {
     const t = fx.timer / fx.duration;
     const x = fx.x - camera.x;
     const y = fx.y - camera.y;
+    const w = fx.w || TILE;
+    const h = fx.h || TILE;
 
     ctx.save();
     ctx.globalAlpha = (1 - t) * 0.9;
     // Outer glow
     ctx.strokeStyle = 'rgba(255, 68, 68, 0.4)';
     ctx.lineWidth = 6;
-    ctx.strokeRect(x, y, TILE, TILE);
+    ctx.strokeRect(x, y, w, h);
     // Inner crisp box
     ctx.strokeStyle = '#ff4444';
     ctx.lineWidth = 2;
-    ctx.strokeRect(x + 2, y + 2, TILE - 4, TILE - 4);
+    ctx.strokeRect(x + 2, y + 2, w - 4, h - 4);
     ctx.restore();
   },
 

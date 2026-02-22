@@ -7,11 +7,21 @@ const DungeonMap = {
 
   init() {
     this.rooms = [
-      this._makeRoom0(), // Entrance Hall
-      this._makeRoom1(), // Corridor
-      this._makeRoom2(), // Great Hall
-      this._makeRoom3(), // Treasury
-      this._makeRoom4(), // Dungeon Depths
+      this._makeRoom0(),  // Entrance Hall
+      this._makeRoom1(),  // Corridor
+      this._makeRoom2(),  // Great Hall
+      this._makeRoom3(),  // Treasury
+      this._makeRoom4(),  // Dungeon Depths
+      this._makeRoom5(),  // Secret Passage
+      this._makeRoom6(),  // Crypt
+      this._makeRoom7(),  // Narrow Maze
+      this._makeRoom8(),  // Armory
+      this._makeRoom9(),  // Catacomb
+      this._makeRoom10(), // Gauntlet
+      this._makeRoom11(), // The Pit
+      this._makeRoom12(), // Ossuary
+      this._makeRoom13(), // Antechamber
+      this._makeRoom14(), // Throne Room
     ];
   },
 
@@ -162,7 +172,7 @@ const DungeonMap = {
       'W..................W',
       'W..................W',
       'W..................W',
-      'WWWWWWWWWWWWWWWWWWWW',
+      'WWWWWWWWWDWWWWWWWWWW',
     ]);
     return {
       name: 'Treasury',
@@ -172,6 +182,7 @@ const DungeonMap = {
       playerStart: { x: 1, y: 7 },
       doors: [
         { x: 0, y: 7, targetRoom: 1, targetX: 17, targetY: 7 },
+        { x: 9, y: 14, targetRoom: 5, targetX: 9, targetY: 1 },
       ],
       enemies: [],
       shopkeeper: { x: 8, y: 12 },
@@ -189,7 +200,7 @@ const DungeonMap = {
       'W......W..W........W',
       'W..................W',
       'W..W............W..W',
-      'W..................W',
+      'D.................DW',
       'W......W..W........W',
       'W..................W',
       'W..W............W..W',
@@ -206,6 +217,8 @@ const DungeonMap = {
       playerStart: { x: 10, y: 1 },
       doors: [
         { x: 9, y: 0, targetRoom: 2, targetX: 9, targetY: 13 },
+        { x: 0, y: 7, targetRoom: 6, targetX: 17, targetY: 7 },
+        { x: 18, y: 7, targetRoom: 7, targetX: 1, targetY: 7 },
       ],
       enemies: [
         { x: 4, y: 4, type: 'skeleton' },
@@ -214,6 +227,409 @@ const DungeonMap = {
         { x: 4, y: 10, type: 'skeleton' },
         { x: 15, y: 10, type: 'skeleton' },
         { x: 10, y: 12, type: 'slime' },
+      ],
+    };
+  },
+
+  // Room 5: Secret Passage — winding corridor between Treasury and Armory
+  _makeRoom5() {
+    const tiles = this._parseRoom([
+      'WWWWWWWWWDWWWWWWWWWW',
+      'W..................W',
+      'W.WWWWWW...WWWWWW..W',
+      'W.W..............W.W',
+      'W.W..WWWWWWWWW...W.W',
+      'W.W..W.......W...W.W',
+      'W....W.......W.....W',
+      'W.W..W.......W...W.W',
+      'W.W..W.......W...W.W',
+      'W.W..WWWW.WWWW...W.W',
+      'W.W..............W.W',
+      'W.WWWWWW...WWWWWW..W',
+      'W..................W',
+      'W..................W',
+      'WWWWWWWWWDWWWWWWWWWW',
+    ]);
+    return {
+      name: 'Secret Passage',
+      tiles,
+      width: ROOM_W,
+      height: ROOM_H,
+      playerStart: { x: 9, y: 1 },
+      doors: [
+        { x: 9, y: 0, targetRoom: 3, targetX: 9, targetY: 13 },
+        { x: 9, y: 14, targetRoom: 8, targetX: 9, targetY: 1 },
+      ],
+      enemies: [
+        { x: 9, y: 6, type: 'slime' },
+        { x: 3, y: 3, type: 'slime' },
+        { x: 15, y: 10, type: 'skeleton' },
+      ],
+    };
+  },
+
+  // Room 6: Crypt — burial chamber with sarcophagus pillars
+  _makeRoom6() {
+    const tiles = this._parseRoom([
+      'WWWWWWWWWWWWWWWWWWWW',
+      'W..................W',
+      'W..WW....WW....WW..W',
+      'W..WW....WW....WW..W',
+      'W..................W',
+      'W..................W',
+      'W..WW....WW....WW..W',
+      'W..WW....WW....WW.DW',
+      'W..................W',
+      'W..................W',
+      'W..WW....WW....WW..W',
+      'W..WW....WW....WW..W',
+      'W..................W',
+      'W..................W',
+      'WWWWWWWWWDWWWWWWWWWW',
+    ]);
+    return {
+      name: 'Crypt',
+      tiles,
+      width: ROOM_W,
+      height: ROOM_H,
+      playerStart: { x: 17, y: 7 },
+      doors: [
+        { x: 18, y: 7, targetRoom: 4, targetX: 1, targetY: 7 },
+        { x: 9, y: 14, targetRoom: 9, targetX: 9, targetY: 1 },
+      ],
+      enemies: [
+        { x: 9, y: 4, type: 'slime' },
+        { x: 5, y: 8, type: 'skeleton' },
+        { x: 14, y: 8, type: 'skeleton' },
+        { x: 9, y: 12, type: 'skeleton' },
+      ],
+    };
+  },
+
+  // Room 7: Narrow Maze — tight corridors with many turns
+  _makeRoom7() {
+    const tiles = this._parseRoom([
+      'WWWWWWWWWWWWWWWWWWWW',
+      'W...W..........W...W',
+      'W...W..WWWWWW..W...W',
+      'W...W..W....W..W...W',
+      'W......W....W......W',
+      'W..WWWWW....WWWWW..W',
+      'W..................W',
+      'D..................W',
+      'W..................W',
+      'W..WWWWW....WWWWW..W',
+      'W......W....W......W',
+      'W...W..W....W..W...W',
+      'W...W..WWWWWW..W...W',
+      'W...W..........W...W',
+      'WWWWWWWWWDWWWWWWWWWW',
+    ]);
+    return {
+      name: 'Narrow Maze',
+      tiles,
+      width: ROOM_W,
+      height: ROOM_H,
+      playerStart: { x: 1, y: 7 },
+      doors: [
+        { x: 0, y: 7, targetRoom: 4, targetX: 17, targetY: 7 },
+        { x: 9, y: 14, targetRoom: 10, targetX: 9, targetY: 1 },
+      ],
+      enemies: [
+        { x: 2, y: 1, type: 'slime' },
+        { x: 17, y: 1, type: 'slime' },
+        { x: 9, y: 6, type: 'skeleton' },
+        { x: 9, y: 8, type: 'skeleton' },
+      ],
+    };
+  },
+
+  // Room 8: Armory — weapon racks (wall pillars) line the walls
+  _makeRoom8() {
+    const tiles = this._parseRoom([
+      'WWWWWWWWWDWWWWWWWWWW',
+      'W..................W',
+      'W.WW..WW....WW..WW.W',
+      'W..................W',
+      'W..................W',
+      'W.WW............WW.W',
+      'W..................W',
+      'W......WW.WW.......W',
+      'W..................W',
+      'W.WW............WW.W',
+      'W..................W',
+      'W..................W',
+      'W.WW..WW....WW..WW.W',
+      'W..................W',
+      'WWWWWWWWWDWWWWWWWWWW',
+    ]);
+    return {
+      name: 'Armory',
+      tiles,
+      width: ROOM_W,
+      height: ROOM_H,
+      playerStart: { x: 9, y: 1 },
+      doors: [
+        { x: 9, y: 0, targetRoom: 5, targetX: 9, targetY: 13 },
+        { x: 9, y: 14, targetRoom: 11, targetX: 9, targetY: 1 },
+      ],
+      enemies: [
+        { x: 5, y: 4, type: 'slime' },
+        { x: 14, y: 4, type: 'slime' },
+        { x: 9, y: 7, type: 'skeleton' },
+        { x: 5, y: 10, type: 'skeleton' },
+        { x: 14, y: 10, type: 'skeleton' },
+        { x: 14, y: 7, type: 'archer' },
+      ],
+    };
+  },
+
+  // Room 9: Catacomb — cramped burial niches
+  _makeRoom9() {
+    const tiles = this._parseRoom([
+      'WWWWWWWWWDWWWWWWWWWW',
+      'W..................W',
+      'W..WW.WW....WW.WW..W',
+      'W..WW.WW....WW.WW..W',
+      'W..................W',
+      'W..................W',
+      'W..WW..........WW..W',
+      'W..................W',
+      'W..WW..........WW..W',
+      'W..................W',
+      'W..................W',
+      'W..WW.WW....WW.WW..W',
+      'W..WW.WW....WW.WW..W',
+      'W..................W',
+      'WWWWWWWWWDWWWWWWWWWW',
+    ]);
+    return {
+      name: 'Catacomb',
+      tiles,
+      width: ROOM_W,
+      height: ROOM_H,
+      playerStart: { x: 9, y: 1 },
+      doors: [
+        { x: 9, y: 0, targetRoom: 6, targetX: 9, targetY: 13 },
+        { x: 9, y: 14, targetRoom: 12, targetX: 9, targetY: 1 },
+      ],
+      enemies: [
+        { x: 9, y: 4, type: 'slime' },
+        { x: 9, y: 10, type: 'slime' },
+        { x: 5, y: 7, type: 'skeleton' },
+        { x: 14, y: 7, type: 'skeleton' },
+        { x: 3, y: 4, type: 'skeleton' },
+        { x: 16, y: 10, type: 'skeleton' },
+      ],
+    };
+  },
+
+  // Room 10: Gauntlet — obstacle course with scattered pillars
+  _makeRoom10() {
+    const tiles = this._parseRoom([
+      'WWWWWWWWWDWWWWWWWWWW',
+      'W..................W',
+      'W..W....W....W..W..W',
+      'W..................W',
+      'W....W....W....W...W',
+      'W..................W',
+      'W..W....W....W.....W',
+      'W.................DW',
+      'W..W....W....W.....W',
+      'W..................W',
+      'W....W....W....W...W',
+      'W..................W',
+      'W..W....W....W..W..W',
+      'W..................W',
+      'WWWWWWWWWWWWWWWWWWWW',
+    ]);
+    return {
+      name: 'Gauntlet',
+      tiles,
+      width: ROOM_W,
+      height: ROOM_H,
+      playerStart: { x: 9, y: 1 },
+      doors: [
+        { x: 9, y: 0, targetRoom: 7, targetX: 9, targetY: 13 },
+        { x: 18, y: 7, targetRoom: 12, targetX: 1, targetY: 7 },
+      ],
+      enemies: [
+        { x: 5, y: 3, type: 'slime' },
+        { x: 14, y: 3, type: 'slime' },
+        { x: 9, y: 7, type: 'slime' },
+        { x: 5, y: 11, type: 'skeleton' },
+        { x: 14, y: 11, type: 'skeleton' },
+        { x: 9, y: 5, type: 'skeleton' },
+      ],
+    };
+  },
+
+  // Room 11: The Pit — open arena with central pit walls
+  _makeRoom11() {
+    const tiles = this._parseRoom([
+      'WWWWWWWWWDWWWWWWWWWW',
+      'W..................W',
+      'W..................W',
+      'W....WWWWWWWWW.....W',
+      'W....W.......W.....W',
+      'W....W.......W.....W',
+      'W....W.......W.....W',
+      'W....W.......W....DW',
+      'W....W.......W.....W',
+      'W....W.......W.....W',
+      'W....W.......W.....W',
+      'W....WWWWWWWWW.....W',
+      'W..................W',
+      'W..................W',
+      'WWWWWWWWWWWWWWWWWWWW',
+    ]);
+    return {
+      name: 'The Pit',
+      tiles,
+      width: ROOM_W,
+      height: ROOM_H,
+      playerStart: { x: 9, y: 1 },
+      doors: [
+        { x: 9, y: 0, targetRoom: 8, targetX: 9, targetY: 13 },
+        { x: 18, y: 7, targetRoom: 13, targetX: 1, targetY: 7 },
+      ],
+      enemies: [
+        { x: 2, y: 2, type: 'slime' },
+        { x: 17, y: 2, type: 'slime' },
+        { x: 2, y: 12, type: 'skeleton' },
+        { x: 17, y: 12, type: 'skeleton' },
+        { x: 16, y: 5, type: 'skeleton' },
+        { x: 16, y: 9, type: 'skeleton' },
+        { x: 2, y: 7, type: 'archer' },
+      ],
+    };
+  },
+
+  // Room 12: Ossuary — bone-lined walls with alcoves
+  _makeRoom12() {
+    const tiles = this._parseRoom([
+      'WWWWWWWWWDWWWWWWWWWW',
+      'W..................W',
+      'W.WW..WW....WW..WW.W',
+      'W.WW..WW....WW..WW.W',
+      'W..................W',
+      'W......WWWWWW......W',
+      'W......W....W......W',
+      'D......W....W......W',
+      'W......W....W......W',
+      'W......WWWWWW......W',
+      'W..................W',
+      'W.WW..WW....WW..WW.W',
+      'W.WW..WW....WW..WW.W',
+      'W..................W',
+      'WWWWWWWWWDWWWWWWWWWW',
+    ]);
+    return {
+      name: 'Ossuary',
+      tiles,
+      width: ROOM_W,
+      height: ROOM_H,
+      playerStart: { x: 9, y: 1 },
+      doors: [
+        { x: 9, y: 0, targetRoom: 9, targetX: 9, targetY: 13 },
+        { x: 0, y: 7, targetRoom: 10, targetX: 17, targetY: 7 },
+        { x: 9, y: 14, targetRoom: 13, targetX: 9, targetY: 1 },
+      ],
+      enemies: [
+        { x: 3, y: 4, type: 'slime' },
+        { x: 16, y: 4, type: 'slime' },
+        { x: 3, y: 10, type: 'slime' },
+        { x: 16, y: 10, type: 'skeleton' },
+        { x: 9, y: 1, type: 'skeleton' },
+        { x: 9, y: 13, type: 'skeleton' },
+        { x: 3, y: 7, type: 'skeleton' },
+      ],
+    };
+  },
+
+  // Room 13: Antechamber — grand hall before the throne room
+  _makeRoom13() {
+    const tiles = this._parseRoom([
+      'WWWWWWWWWDWWWWWWWWWW',
+      'W..................W',
+      'W..WW..........WW..W',
+      'W..WW..........WW..W',
+      'W..................W',
+      'W......WW.WW.......W',
+      'W..................W',
+      'D..................W',
+      'W..................W',
+      'W......WW.WW.......W',
+      'W..................W',
+      'W..WW..........WW..W',
+      'W..WW..........WW..W',
+      'W..................W',
+      'WWWWWWWWWDWWWWWWWWWW',
+    ]);
+    return {
+      name: 'Antechamber',
+      tiles,
+      width: ROOM_W,
+      height: ROOM_H,
+      playerStart: { x: 9, y: 1 },
+      doors: [
+        { x: 0, y: 7, targetRoom: 11, targetX: 17, targetY: 7 },
+        { x: 9, y: 0, targetRoom: 12, targetX: 9, targetY: 13 },
+        { x: 9, y: 14, targetRoom: 14, targetX: 9, targetY: 1 },
+      ],
+      enemies: [
+        { x: 5, y: 4, type: 'slime' },
+        { x: 14, y: 4, type: 'slime' },
+        { x: 5, y: 10, type: 'slime' },
+        { x: 14, y: 10, type: 'slime' },
+        { x: 3, y: 7, type: 'skeleton' },
+        { x: 16, y: 7, type: 'skeleton' },
+        { x: 9, y: 4, type: 'skeleton' },
+        { x: 9, y: 10, type: 'skeleton' },
+      ],
+    };
+  },
+
+  // Room 14: Throne Room — final boss room, grand symmetric hall
+  _makeRoom14() {
+    const tiles = this._parseRoom([
+      'WWWWWWWWWDWWWWWWWWWW',
+      'W..................W',
+      'W..WW..........WW..W',
+      'W..WW..........WW..W',
+      'W..................W',
+      'W....WW......WW....W',
+      'W....WW......WW....W',
+      'W..................W',
+      'W....WW......WW....W',
+      'W....WW......WW....W',
+      'W..................W',
+      'W..WW..........WW..W',
+      'W..WW..........WW..W',
+      'W..................W',
+      'WWWWWWWWWWWWWWWWWWWW',
+    ]);
+    return {
+      name: 'Throne Room',
+      tiles,
+      width: ROOM_W,
+      height: ROOM_H,
+      playerStart: { x: 9, y: 1 },
+      doors: [
+        { x: 9, y: 0, targetRoom: 13, targetX: 9, targetY: 13 },
+      ],
+      enemies: [
+        { x: 5, y: 2, type: 'archer' },
+        { x: 14, y: 2, type: 'archer' },
+        { x: 5, y: 12, type: 'slime' },
+        { x: 14, y: 12, type: 'slime' },
+        { x: 3, y: 7, type: 'skeleton' },
+        { x: 16, y: 7, type: 'skeleton' },
+        { x: 7, y: 5, type: 'skeleton' },
+        { x: 12, y: 5, type: 'skeleton' },
+        { x: 7, y: 9, type: 'skeleton' },
+        { x: 12, y: 9, type: 'skeleton' },
+        { x: 9, y: 7, type: 'brute' },
       ],
     };
   },

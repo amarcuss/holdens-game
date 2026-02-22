@@ -56,6 +56,20 @@ const COLORS = {
   BONE_LIGHT: '#f0ece4',
   SKEL_EYE: '#c0392b',
 
+  // Archer
+  ARCHER_CLOAK: '#2d5a1e',
+  ARCHER_HOOD: '#1e3d14',
+  ARCHER_BOW: '#8b6914',
+  ARCHER_EYE: '#c8e6c9',
+
+  // Brute
+  BRUTE_BODY: '#2d8a4e',
+  BRUTE_DARK: '#1a6b3a',
+  BRUTE_LIGHT: '#4ebd6e',
+  BRUTE_SPIKE: '#8b6914',
+  BRUTE_EYE: '#e74c3c',
+  BRUTE_BELLY: '#3aad5e',
+
   // UI
   BG: '#1a1a2e',
   TEXT: '#eee',

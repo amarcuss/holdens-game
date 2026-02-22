@@ -107,6 +107,8 @@ const Sprites = {
     // --- Enemy sprites ---
     this._initSlime();
     this._initSkeleton();
+    this._initArcher();
+    this._initBrute();
 
     // --- Shopkeeper sprite ---
     this.shopkeeper = this._parse([
@@ -260,6 +262,118 @@ const Sprites = {
     ], pal);
 
     this.skeletonSprites = [this.skeletonUp, this.skeletonDown, this.skeletonLeft, this.skeletonRight];
+  },
+
+  _initArcher() {
+    const pal = {
+      'C': COLORS.ARCHER_CLOAK, 'H': COLORS.ARCHER_HOOD,
+      'B': COLORS.ARCHER_BOW, 'E': COLORS.ARCHER_EYE,
+      'S': COLORS.SKIN, 'D': '#1a3010', '.': null,
+    };
+
+    // Facing down: hooded figure with bow held vertically
+    this.archerDown = this._parse([
+      '......HHHH......',
+      '.....HHHHHH.....',
+      '.....HHSSHH.....',
+      '.....HSESHH.....',
+      '.....HHSSHH.....',
+      '......HHHH......',
+      '.....CCCCCC.....',
+      '....CCCCCCCC....',
+      '....CCB.CCCC....',
+      '....CCB.CCCC....',
+      '....CCB..CCC....',
+      '.......DD.......',
+      '......DDDD......',
+      '......DD.DD.....',
+      '......DD.DD.....',
+      '......DD.DD.....',
+    ], pal);
+
+    // Facing up: back of hood, bow visible on back
+    this.archerUp = this._parse([
+      '......HHHH......',
+      '.....HHHHHH.....',
+      '.....HHHHHH.....',
+      '.....HHHHHH.....',
+      '.....HHHHHH.....',
+      '......HHHH......',
+      '.....CCCCCC.....',
+      '....CCCCCCCC....',
+      '....CCCC.BCC....',
+      '....CCCC.BCC....',
+      '....CCC..BCC....',
+      '.......DD.......',
+      '......DDDD......',
+      '......DD.DD.....',
+      '......DD.DD.....',
+      '......DD.DD.....',
+    ], pal);
+
+    // Facing left: bow drawn to the left
+    this.archerLeft = this._parse([
+      '......HHHH......',
+      '.....HHHHHH.....',
+      '....SSHHHH......',
+      '....SEHHHH......',
+      '....SSHHHH......',
+      '.....HHH........',
+      '...BCCCCCC......',
+      '...BCCCCCCCC....',
+      '...BCCCCCCCC....',
+      '....CCCCCCCC....',
+      '....CCC..CCC....',
+      '.......DDD......',
+      '......DDDD......',
+      '......DD.DD.....',
+      '......DD.DD.....',
+      '......DD.DD.....',
+    ], pal);
+
+    // Facing right: bow drawn to the right
+    this.archerRight = this._parse([
+      '......HHHH......',
+      '.....HHHHHH.....',
+      '......HHHHSS....',
+      '......HHHHES....',
+      '......HHHHSS....',
+      '........HHH.....',
+      '......CCCCCCB...',
+      '....CCCCCCCCB...',
+      '....CCCCCCCCB...',
+      '....CCCCCCCC....',
+      '....CCC..CCC....',
+      '......DDD.......',
+      '......DDDD......',
+      '......DD.DD.....',
+      '......DD.DD.....',
+      '......DD.DD.....',
+    ], pal);
+
+    this.archerSprites = [this.archerUp, this.archerDown, this.archerLeft, this.archerRight];
+  },
+
+  _initBrute() {
+    // Scale the slime sprite 2x to make a 32x32 big slime
+    const slime16 = this.slimeDown;
+    const brute32 = [];
+    for (let y = 0; y < 16; y++) {
+      const row1 = [];
+      const row2 = [];
+      for (let x = 0; x < 16; x++) {
+        const c = slime16[y][x];
+        row1.push(c, c);
+        row2.push(c, c);
+      }
+      brute32.push(row1, row2);
+    }
+    this.bruteDown = brute32;
+
+    this.bruteUp = this.bruteDown;
+    this.bruteLeft = this.bruteDown;
+    this.bruteRight = this.bruteDown;
+    this.bruteSprites = [this.bruteUp, this.bruteDown, this.bruteLeft, this.bruteRight];
   },
 
   _makeFloor() {

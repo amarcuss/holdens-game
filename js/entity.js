@@ -25,9 +25,26 @@ class Entity {
     this.arrivedX = tileX;
     this.arrivedY = tileY;
 
+    // Multi-tile size (default 1x1)
+    this.tileW = 1;
+    this.tileH = 1;
+
     // Animation
     this.animTimer = 0;
     this.animFrame = 0;
+  }
+
+  // Check if this entity occupies a given tile
+  occupiesTile(x, y) {
+    return x >= this.tileX && x < this.tileX + this.tileW &&
+           y >= this.tileY && y < this.tileY + this.tileH;
+  }
+
+  // Minimum Manhattan distance from any occupied tile to target
+  distanceTo(tx, ty) {
+    const cx = Math.max(this.tileX, Math.min(tx, this.tileX + this.tileW - 1));
+    const cy = Math.max(this.tileY, Math.min(ty, this.tileY + this.tileH - 1));
+    return Math.abs(tx - cx) + Math.abs(ty - cy);
   }
 
   // Start moving toward a tile
@@ -35,7 +52,12 @@ class Entity {
     const newX = this.tileX + dx;
     const newY = this.tileY + dy;
 
-    if (!DungeonMap.isWalkable(newX, newY)) return false;
+    // Check walkability for all tiles in footprint
+    for (let oy = 0; oy < this.tileH; oy++) {
+      for (let ox = 0; ox < this.tileW; ox++) {
+        if (!DungeonMap.isWalkable(newX + ox, newY + oy)) return false;
+      }
+    }
 
     this.moving = true;
     this.moveProgress = 0;

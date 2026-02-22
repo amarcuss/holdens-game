@@ -11,6 +11,8 @@ class Enemy extends Entity {
     super(tileX, tileY, config.hp);
 
     this.type = type;
+    this.tileW = config.tileW || 1;
+    this.tileH = config.tileH || 1;
     this.speed = config.speed;
     this.chaseRange = config.chaseRange;
     this.attackDamage = config.damage;
@@ -49,10 +51,13 @@ class Enemy extends Entity {
 
     if (this.moving) return;
 
-    // Calculate distance to player
-    const dx = player.tileX - this.tileX;
-    const dy = player.tileY - this.tileY;
-    const dist = Math.abs(dx) + Math.abs(dy);
+    // Calculate distance to player (uses nearest tile for multi-tile entities)
+    const dist = this.distanceTo(player.tileX, player.tileY);
+    // Direction from center of this entity to player (for movement decisions)
+    const centerX = this.tileX + (this.tileW - 1) / 2;
+    const centerY = this.tileY + (this.tileH - 1) / 2;
+    const dx = player.tileX - centerX;
+    const dy = player.tileY - centerY;
 
     // State transitions
     if (dist <= this.chaseRange && player.alive) {
@@ -79,7 +84,7 @@ class Enemy extends Entity {
           this.patrolDir = Math.floor(Math.random() * 4);
           const pdx = DIR_DX[this.patrolDir];
           const pdy = DIR_DY[this.patrolDir];
-          if (!this._isOccupied(this.tileX + pdx, this.tileY + pdy, enemies)) {
+          if (!this._isDestinationBlocked(this.tileX + pdx, this.tileY + pdy, enemies)) {
             this.startMove(pdx, pdy);
           }
         }
@@ -89,6 +94,12 @@ class Enemy extends Entity {
         this.aiTimer += dt;
         if (this.aiTimer >= 0.4) {
           this.aiTimer = 0;
+
+          // Archer: ranged AI
+          if (this.type === 'archer') {
+            this._archerChase(dx, dy, dist, player, enemies);
+            return;
+          }
 
           // Adjacent to player? Attack instead of move
           if (dist === 1) {
@@ -105,22 +116,20 @@ class Enemy extends Entity {
           if (Math.abs(dx) >= Math.abs(dy)) {
             moveDx = dx > 0 ? 1 : -1;
             // If blocked, try the other axis
-            if (!DungeonMap.isWalkable(this.tileX + moveDx, this.tileY) ||
-                this._isOccupied(this.tileX + moveDx, this.tileY, enemies)) {
+            if (this._isDestinationBlocked(this.tileX + moveDx, this.tileY, enemies)) {
               moveDx = 0;
               moveDy = dy > 0 ? 1 : (dy < 0 ? -1 : 0);
             }
           } else {
             moveDy = dy > 0 ? 1 : -1;
-            if (!DungeonMap.isWalkable(this.tileX, this.tileY + moveDy) ||
-                this._isOccupied(this.tileX, this.tileY + moveDy, enemies)) {
+            if (this._isDestinationBlocked(this.tileX, this.tileY + moveDy, enemies)) {
               moveDy = 0;
               moveDx = dx > 0 ? 1 : (dx < 0 ? -1 : 0);
             }
           }
 
           if ((moveDx !== 0 || moveDy !== 0) &&
-              !this._isOccupied(this.tileX + moveDx, this.tileY + moveDy, enemies)) {
+              !this._isDestinationBlocked(this.tileX + moveDx, this.tileY + moveDy, enemies)) {
             this.startMove(moveDx, moveDy);
           }
         }
@@ -136,9 +145,135 @@ class Enemy extends Entity {
     }
   }
 
+  _archerChase(dx, dy, dist, player, enemies) {
+    const config = Enemy.TYPES.archer;
+
+    // Always prioritize shooting if we have LOS and cooldown is ready
+    const losDir = this._getLineOfSight(player);
+    if (losDir !== null && this.attackCooldown <= 0) {
+      this.facing = losDir;
+      this.attackCooldown = this.attackRate;
+      Projectiles.shoot(this.tileX, this.tileY, losDir, this.attackDamage, config.projectileSpeed);
+      return;
+    }
+
+    // Only retreat when player is directly adjacent
+    if (dist <= 1) {
+      this._moveAwayFrom(dx, dy, enemies);
+      return;
+    }
+
+    // Too far — move closer
+    if (dist > config.preferredRange) {
+      this._moveToward(dx, dy, enemies);
+      return;
+    }
+
+    // At good range but no LOS — strafe to find a shot
+    if (losDir === null) {
+      this._strafeForLineOfSight(dx, dy, player, enemies);
+    }
+  }
+
+  // Returns direction constant if player is on same row/col with clear tiles between, else null
+  _getLineOfSight(player) {
+    const dx = player.tileX - this.tileX;
+    const dy = player.tileY - this.tileY;
+
+    if (dx === 0 && dy !== 0) {
+      const dir = dy > 0 ? DIR.DOWN : DIR.UP;
+      const step = dy > 0 ? 1 : -1;
+      for (let y = this.tileY + step; y !== player.tileY; y += step) {
+        if (!DungeonMap.isWalkable(this.tileX, y)) return null;
+      }
+      return dir;
+    }
+    if (dy === 0 && dx !== 0) {
+      const dir = dx > 0 ? DIR.RIGHT : DIR.LEFT;
+      const step = dx > 0 ? 1 : -1;
+      for (let x = this.tileX + step; x !== player.tileX; x += step) {
+        if (!DungeonMap.isWalkable(x, this.tileY)) return null;
+      }
+      return dir;
+    }
+    return null;
+  }
+
+  _moveAwayFrom(dx, dy, enemies) {
+    // Move in the opposite direction of the player
+    const tryDirs = [];
+    if (Math.abs(dx) >= Math.abs(dy)) {
+      tryDirs.push({ mx: dx > 0 ? -1 : 1, my: 0 });
+      tryDirs.push({ mx: 0, my: dy > 0 ? -1 : 1 });
+    } else {
+      tryDirs.push({ mx: 0, my: dy > 0 ? -1 : 1 });
+      tryDirs.push({ mx: dx > 0 ? -1 : 1, my: 0 });
+    }
+    for (const d of tryDirs) {
+      if (!this._isDestinationBlocked(this.tileX + d.mx, this.tileY + d.my, enemies)) {
+        this.startMove(d.mx, d.my);
+        return;
+      }
+    }
+  }
+
+  _moveToward(dx, dy, enemies) {
+    let moveDx = 0, moveDy = 0;
+    if (Math.abs(dx) >= Math.abs(dy)) {
+      moveDx = dx > 0 ? 1 : -1;
+      if (this._isDestinationBlocked(this.tileX + moveDx, this.tileY, enemies)) {
+        moveDx = 0;
+        moveDy = dy > 0 ? 1 : (dy < 0 ? -1 : 0);
+      }
+    } else {
+      moveDy = dy > 0 ? 1 : -1;
+      if (this._isDestinationBlocked(this.tileX, this.tileY + moveDy, enemies)) {
+        moveDy = 0;
+        moveDx = dx > 0 ? 1 : (dx < 0 ? -1 : 0);
+      }
+    }
+    if ((moveDx !== 0 || moveDy !== 0) &&
+        !this._isDestinationBlocked(this.tileX + moveDx, this.tileY + moveDy, enemies)) {
+      this.startMove(moveDx, moveDy);
+    }
+  }
+
+  _strafeForLineOfSight(dx, dy, player, enemies) {
+    // Move perpendicular to the player direction to find LOS
+    const perpDirs = [];
+    if (Math.abs(dx) >= Math.abs(dy)) {
+      // Player is mostly horizontal — strafe vertically
+      perpDirs.push({ mx: 0, my: -1 });
+      perpDirs.push({ mx: 0, my: 1 });
+    } else {
+      // Player is mostly vertical — strafe horizontally
+      perpDirs.push({ mx: -1, my: 0 });
+      perpDirs.push({ mx: 1, my: 0 });
+    }
+    // Shuffle to avoid always going same direction
+    if (Math.random() < 0.5) perpDirs.reverse();
+    for (const d of perpDirs) {
+      if (!this._isDestinationBlocked(this.tileX + d.mx, this.tileY + d.my, enemies)) {
+        this.startMove(d.mx, d.my);
+        return;
+      }
+    }
+  }
+
   _isOccupied(x, y, enemies) {
     for (const e of enemies) {
-      if (e !== this && e.alive && e.tileX === x && e.tileY === y) return true;
+      if (e !== this && e.alive && e.occupiesTile(x, y)) return true;
+    }
+    return false;
+  }
+
+  // Check if moving to newX, newY would be blocked by walls or other enemies
+  _isDestinationBlocked(newX, newY, enemies) {
+    for (let oy = 0; oy < this.tileH; oy++) {
+      for (let ox = 0; ox < this.tileW; ox++) {
+        if (!DungeonMap.isWalkable(newX + ox, newY + oy)) return true;
+        if (this._isOccupied(newX + ox, newY + oy, enemies)) return true;
+      }
     }
     return false;
   }
@@ -164,8 +299,10 @@ class Enemy extends Entity {
         offsetY = -6 + st * 6;
       }
       ctx.globalAlpha = alpha;
-      const drawX = this.px - camera.x + TILE * (1 - scale) / 2;
-      const drawY = this.py - camera.y + TILE * (1 - scale) + offsetY;
+      const fullW = TILE * this.tileW;
+      const fullH = TILE * this.tileH;
+      const drawX = this.px - camera.x + fullW * (1 - scale) / 2;
+      const drawY = this.py - camera.y + fullH * (1 - scale) + offsetY;
       ctx.translate(drawX, drawY);
       ctx.scale(scale, scale);
       Sprites.draw(ctx, this._getSprite(), 0, 0);
@@ -188,6 +325,8 @@ class Enemy extends Entity {
 
   _getSprites() {
     if (this.type === 'slime') return Sprites.slimeSprites;
+    if (this.type === 'archer') return Sprites.archerSprites;
+    if (this.type === 'brute') return Sprites.bruteSprites;
     return Sprites.skeletonSprites;
   }
 
@@ -215,5 +354,27 @@ Enemy.TYPES = {
     attackRate: 0.8,
     xp: 2,
     coinDrop: { min: 2, max: 5 },
+  },
+  archer: {
+    hp: 3,
+    speed: 2,
+    chaseRange: 7,
+    damage: 1,
+    attackRate: 2.0,
+    xp: 3,
+    coinDrop: { min: 2, max: 4 },
+    preferredRange: 4,
+    projectileSpeed: 200,
+  },
+  brute: {
+    hp: 10,
+    speed: 1.2,
+    chaseRange: 5,
+    damage: 3,
+    attackRate: 1.5,
+    xp: 5,
+    coinDrop: { min: 4, max: 8 },
+    tileW: 2,
+    tileH: 2,
   },
 };

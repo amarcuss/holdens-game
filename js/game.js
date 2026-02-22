@@ -53,6 +53,7 @@ class Game {
     this.clearedRooms = new Set();
     this.spawnRoom();
     Combat.clear();
+    Projectiles.clear();
   }
 
   spawnRoom() {
@@ -170,9 +171,21 @@ class Game {
           const config = Enemy.TYPES[enemy.type];
           const count = config.coinDrop.min +
             Math.floor(Math.random() * (config.coinDrop.max - config.coinDrop.min + 1));
-          this.coins.push(new Coin(enemy.tileX, enemy.tileY, count));
+          const coinX = enemy.tileX + Math.floor(enemy.tileW / 2);
+          const coinY = enemy.tileY + Math.floor(enemy.tileH / 2);
+          this.coins.push(new Coin(coinX, coinY, count));
         }
         if (enemy.isDead) {
+          // Brute splits into two slimes on death
+          if (enemy.type === 'brute') {
+            const s1 = new Enemy(enemy.tileX, enemy.tileY, 'slime');
+            const s2 = new Enemy(enemy.tileX + 1, enemy.tileY + 1, 'slime');
+            s1.aiState = AI.CHASE;
+            s1.idleTime = 0;
+            s2.aiState = AI.CHASE;
+            s2.idleTime = 0;
+            this.enemies.push(s1, s2);
+          }
           this.enemies.splice(i, 1);
         }
       }
@@ -213,6 +226,9 @@ class Game {
 
       // Update combat effects
       Combat.update(dt);
+
+      // Update projectiles
+      Projectiles.update(dt, this.player);
 
       // Check player took damage (for screen shake)
       if (this.player.hurtTimer > 0.28) {
@@ -283,6 +299,7 @@ class Game {
         this.player.snapToTile(this.pendingDoor.targetX, this.pendingDoor.targetY);
         this.spawnRoom();
         Combat.clear();
+        Projectiles.clear();
 
         const room = DungeonMap.getRoom();
         this.camera.snapTo(this.player, room.width, room.height);
@@ -342,7 +359,7 @@ class Game {
         }
 
         for (const enemy of this.enemies) {
-          entities.push({ y: enemy.py, draw: () => enemy.draw(ctx, this.camera) });
+          entities.push({ y: enemy.py + (enemy.tileH - 1) * TILE, draw: () => enemy.draw(ctx, this.camera) });
         }
 
         entities.sort((a, b) => a.y - b.y);
@@ -352,6 +369,9 @@ class Game {
 
         // Draw combat effects on top
         Combat.draw(ctx, this.camera);
+
+        // Draw projectiles
+        Projectiles.draw(ctx, this.camera);
 
         // Shop prompt
         if (this._shopPromptVisible && this.state === STATE.PLAYING) {
