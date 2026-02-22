@@ -20,6 +20,8 @@ const T = {
   WOOD_WALL: 4,
   GRASS: 5,
   TREE: 6,
+  ICE: 7,
+  ICE_WALL: 8,
 };
 
 // Colors
@@ -73,6 +75,20 @@ const COLORS = {
   BRUTE_EYE: '#e74c3c',
   BRUTE_BELLY: '#3aad5e',
 
+  // Ice tiles
+  ICE_FLOOR1: '#8a9aaa',
+  ICE_FLOOR2: '#7a8a9a',
+  ICE_WALL_DARK: '#3a4a6c',
+  ICE_WALL_LIGHT: '#4a5a7a',
+  ICE_WALL_TOP: '#2a3a5c',
+
+  // Frost Sprite
+  FROST_BODY: '#6ac8e8',
+  FROST_DARK: '#4aa0c8',
+  FROST_LIGHT: '#9ae0f8',
+  FROST_CORE: '#e0f4ff',
+  FROST_EYE: '#1a3050',
+
   // UI
   BG: '#1a1a2e',
   TEXT: '#eee',
@@ -96,7 +112,8 @@ const STATE = {
 
 // Available dungeons
 const DUNGEONS = [
-  { key: 'holdens', name: "Holden's Dungeon", desc: 'The dungeon where it all began.' },
+  { key: 'holdens', name: "Holden's Dungeon", desc: 'The dungeon where it all began.', startRoom: 0, bossRoom: 14, introScene: 'intro', endingScene: 'ending' },
+  { key: 'frozen', name: 'The Frozen Depths', desc: 'An ancient dungeon sealed in ice.', startRoom: 16, bossRoom: 35, introScene: 'frozen_intro', endingScene: 'frozen_ending' },
 ];
 
 // Story scenes — each scene is an array of pages, each page is an array of lines
@@ -219,6 +236,127 @@ const STORY_SCENES = {
       'A small house between the trees.',
     ],
   ],
+
+  // --- Frozen Depths stories ---
+  frozen_intro: [
+    [
+      'The house door opens onto',
+      'a staircase carved in ice.',
+      'Cold air rushes upward.',
+    ],
+    [
+      'Each step cracks with frost.',
+      'Something ancient stirs below,',
+      'frozen but not dead.',
+    ],
+    [
+      'Your breath hangs white.',
+      'Sword ready. Descend.',
+    ],
+  ],
+  frozen_crossroads: [
+    [
+      'Passages branch in every',
+      'direction, each one coated',
+      'in a thicker layer of ice.',
+    ],
+    [
+      'Crystalline shapes drift',
+      'through the corridors —',
+      'frost sprites. They see you.',
+    ],
+  ],
+  glacial_hall: [
+    [
+      'A frozen merchant crouches',
+      'by a fire that gives no heat.',
+      '"Even the cold needs coin."',
+    ],
+  ],
+  crystal_cavern: [
+    [
+      'The walls pulse with pale',
+      'blue light. Crystals hum',
+      'a low, resonant note.',
+    ],
+    [
+      'Something moves inside',
+      'the crystal. Watching.',
+    ],
+  ],
+  frozen_falls: [
+    [
+      'A frozen waterfall hangs',
+      'suspended mid-cascade.',
+      'The silence is deafening.',
+    ],
+  ],
+  frost_maze: [
+    [
+      'The corridors twist and',
+      'double back. Ice mirrors',
+      'your reflection from every wall.',
+    ],
+    [
+      'Arrows whistle from unseen',
+      'alcoves. The maze fights back.',
+    ],
+  ],
+  glacial_depths: [
+    [
+      'The temperature drops again.',
+      'Frost crackles across your',
+      'armor with every step.',
+    ],
+    [
+      'The walls narrow. Ahead,',
+      'a gauntlet of frost and bone.',
+    ],
+  ],
+  frostbound_antechamber: [
+    [
+      'Grand pillars of solid ice.',
+      'Carvings of a frozen king',
+      'line the frozen walls.',
+    ],
+    [
+      'A deep rumble shakes loose',
+      'icicles from the ceiling.',
+      'The throne room awaits.',
+    ],
+  ],
+  frozen_throne: [
+    [
+      'A vast frozen hall. At its',
+      'center, a throne of black ice.',
+    ],
+    [
+      'The ground shudders.',
+      'The ice cracks. Something',
+      'massive pulls itself free.',
+    ],
+    [
+      'The Frozen Depths will',
+      'not let you leave.',
+    ],
+  ],
+  frozen_ending: [
+    [
+      'The last shard of ice',
+      'shatters. Warmth floods',
+      'the chamber.',
+    ],
+    [
+      'The frozen walls begin',
+      'to melt. Water pools at',
+      'your feet.',
+    ],
+    [
+      'You climb the thawing steps,',
+      'back to daylight.',
+      'The cliff house stands warm.',
+    ],
+  ],
 };
 
 // Map room indices to story scene keys (played on first entry)
@@ -230,6 +368,15 @@ const ROOM_STORIES = {
   8: 'armory',
   13: 'antechamber',
   14: 'throne',
+  // Frozen Depths
+  18: 'frozen_crossroads',
+  19: 'glacial_hall',
+  20: 'crystal_cavern',
+  24: 'frozen_falls',
+  26: 'frost_maze',
+  31: 'glacial_depths',
+  34: 'frostbound_antechamber',
+  35: 'frozen_throne',
 };
 
 // Directions

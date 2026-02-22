@@ -327,6 +327,7 @@ class Enemy extends Entity {
     if (this.type === 'slime') return Sprites.slimeSprites;
     if (this.type === 'archer') return Sprites.archerSprites;
     if (this.type === 'brute') return Sprites.bruteSprites;
+    if (this.type === 'frost_sprite') return Sprites.frostSpriteSprites;
     return Sprites.skeletonSprites;
   }
 
@@ -376,5 +377,14 @@ Enemy.TYPES = {
     coinDrop: { min: 4, max: 8 },
     tileW: 2,
     tileH: 2,
+  },
+  frost_sprite: {
+    hp: 5,
+    speed: 3,
+    chaseRange: 6,
+    damage: 2,
+    attackRate: 1.0,
+    xp: 4,
+    coinDrop: { min: 3, max: 6 },
   },
 };

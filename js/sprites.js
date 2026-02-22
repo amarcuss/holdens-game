@@ -109,6 +109,7 @@ const Sprites = {
     this._initSkeleton();
     this._initArcher();
     this._initBrute();
+    this._initFrostSprite();
 
     // --- Shopkeeper sprite ---
     this.shopkeeper = this._parse([
@@ -144,6 +145,10 @@ const Sprites = {
 
     // --- Door tile ---
     this.door = this._makeDoor();
+
+    // --- Ice tiles ---
+    this.iceFloor = this._makeIceFloor();
+    this.iceWall = this._makeIceWall();
   },
 
   _initSlime() {
@@ -379,6 +384,39 @@ const Sprites = {
     this.bruteSprites = [this.bruteUp, this.bruteDown, this.bruteLeft, this.bruteRight];
   },
 
+  _initFrostSprite() {
+    const pal = {
+      'B': COLORS.FROST_BODY, 'D': COLORS.FROST_DARK,
+      'L': COLORS.FROST_LIGHT, 'C': COLORS.FROST_CORE,
+      'E': COLORS.FROST_EYE, '.': null,
+    };
+
+    // Diamond-shaped crystalline sprite (same all directions — it floats)
+    this.frostSpriteDown = this._parse([
+      '................',
+      '.......LL.......',
+      '......LLLL......',
+      '.....LLBBLL.....',
+      '....LLBBBBLL....',
+      '...LLBBBBBBLL...',
+      '...LBBBCCBBBL...',
+      '..LLBBCEECBBLL..',
+      '..LLBBCEECBBLL..',
+      '...LBBBCCBBBL...',
+      '...LLBBBBBBLL...',
+      '....LLBBBBLL....',
+      '.....LLBBLL.....',
+      '......DDDD......',
+      '.......DD.......',
+      '................',
+    ], pal);
+
+    this.frostSpriteUp = this.frostSpriteDown;
+    this.frostSpriteLeft = this.frostSpriteDown;
+    this.frostSpriteRight = this.frostSpriteDown;
+    this.frostSpriteSprites = [this.frostSpriteUp, this.frostSpriteDown, this.frostSpriteLeft, this.frostSpriteRight];
+  },
+
   _initBook() {
     this.book = this._parse([
       '................',
@@ -467,6 +505,42 @@ const Sprites = {
           // Interior with subtle depth gradient
           const depth = y < 6 ? '#2a2a3a' : '#222233';
           row.push(depth);
+        }
+      }
+      s.push(row);
+    }
+    return s;
+  },
+
+  _makeIceFloor() {
+    const s = [];
+    for (let y = 0; y < SPRITE_SIZE; y++) {
+      const row = [];
+      for (let x = 0; x < SPRITE_SIZE; x++) {
+        if (x === 0 || y === 0) {
+          row.push('#6a7a8a');
+        } else {
+          row.push(COLORS.ICE_FLOOR1);
+        }
+      }
+      s.push(row);
+    }
+    return s;
+  },
+
+  _makeIceWall() {
+    const s = [];
+    for (let y = 0; y < SPRITE_SIZE; y++) {
+      const row = [];
+      for (let x = 0; x < SPRITE_SIZE; x++) {
+        if (y < 4) {
+          row.push(COLORS.ICE_WALL_TOP);
+        } else if (x === 0 || x === 15 || y === 4) {
+          row.push('#2e3e58');
+        } else if (y === 9 || y === 10) {
+          row.push('#2e3e58');
+        } else {
+          row.push(COLORS.ICE_WALL_DARK);
         }
       }
       s.push(row);

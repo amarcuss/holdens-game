@@ -19,6 +19,11 @@ const BESTIARY_DATA = {
     flavor: 'A massive slime that has consumed enough adventurers to grow twice as large. Splits into two smaller slimes upon defeat.',
     getSprite() { return Sprites.slimeDown; },
   },
+  frost_sprite: {
+    name: 'Frost Sprite',
+    flavor: 'A crystalline entity born from ancient ice. It drifts silently through frozen halls, striking with bitter cold.',
+    getSprite() { return Sprites.frostSpriteDown; },
+  },
 };
 
 const ALL_TYPES = Object.keys(BESTIARY_DATA);

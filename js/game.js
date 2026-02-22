@@ -44,11 +44,15 @@ class Game {
     // Dungeon select cursor
     this.dungeonCursor = 0;
 
+    // Active dungeon metadata
+    this.currentDungeon = DUNGEONS[0];
+
     this.lastTime = 0;
   }
 
   startNewGame() {
     this.state = STATE.PLAYING;
+    this.currentDungeon = DUNGEONS[0];
     DungeonMap.currentRoom = 0;
     const startRoom = DungeonMap.getRoom();
     this.player = new Player(startRoom.playerStart.x, startRoom.playerStart.y);
@@ -67,12 +71,20 @@ class Game {
 
   startDungeon() {
     this.state = STATE.PLAYING;
-    DungeonMap.currentRoom = 0;
+    this.currentDungeon = DUNGEONS[this.dungeonCursor];
+    DungeonMap.currentRoom = this.currentDungeon.startRoom;
     const startRoom = DungeonMap.getRoom();
     // Preserve coins and equipment — only reset dungeon state
     const savedCoins = this.player ? this.player.coins : 0;
+    const savedSword = Inventory.equippedSword;
+    const savedArmor = Inventory.equippedArmor;
     this.player = new Player(startRoom.playerStart.x, startRoom.playerStart.y);
     this.player.coins = savedCoins;
+    // Reapply equipment stat bonuses
+    Inventory.equippedSword = savedSword;
+    Inventory.equippedArmor = savedArmor;
+    this.player.attack = PLAYER_BASE_ATK + Inventory.getAttackBonus();
+    this.player.defense = PLAYER_BASE_DEF + Inventory.getDefenseBonus();
     this.totalCoins = 0;
     this.enemiesSlain = 0;
     this.particles = [];
@@ -238,10 +250,10 @@ class Game {
         if (room.enemies && room.enemies.length > 0) {
           this.clearedRooms.add(DungeonMap.currentRoom);
 
-          // Victory: clearing the Throne Room (room 14) triggers the ending
-          if (DungeonMap.currentRoom === 14) {
+          // Victory: clearing the boss room triggers the ending
+          if (DungeonMap.currentRoom === this.currentDungeon.bossRoom) {
             this.state = STATE.STORY;
-            Story.play('ending', () => {
+            Story.play(this.currentDungeon.endingScene, () => {
               this.state = STATE.PLAYING;
               DungeonMap.currentRoom = 15;
               const cliffRoom = DungeonMap.getRoom();
@@ -313,7 +325,7 @@ class Game {
       // DEBUG: press V to trigger victory
       if (Input.wasPressed('KeyV')) {
         this.state = STATE.STORY;
-        Story.play('ending', () => {
+        Story.play(this.currentDungeon.endingScene, () => {
           this.state = STATE.PLAYING;
           DungeonMap.currentRoom = 15;
           const cliffRoom = DungeonMap.getRoom();
@@ -360,8 +372,9 @@ class Game {
         this.dungeonCursor = Math.min(DUNGEONS.length - 1, this.dungeonCursor + 1);
       }
       if (Input.wasPressed('Enter')) {
+        const dungeon = DUNGEONS[this.dungeonCursor];
         this.state = STATE.STORY;
-        Story.play('intro', () => this.startDungeon());
+        Story.play(dungeon.introScene, () => this.startDungeon());
       }
     }
   }
