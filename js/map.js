@@ -736,7 +736,7 @@ const DungeonMap = {
   },
 
   // Room 17: Ice Corridor
-  // Doors: left→16, right→19
+  // Doors: left→16
   _makeRoom17() {
     const tiles = this._parseRoom([
       'FFFFFFFFFFFFFFFFFFFF',
@@ -746,7 +746,7 @@ const DungeonMap = {
       'FI................IF',
       'FI................IF',
       'FI................IF',
-      'DI................DF',
+      'DI................IF',
       'FI................IF',
       'FI................IF',
       'FI................IF',
@@ -763,7 +763,6 @@ const DungeonMap = {
       playerStart: { x: 1, y: 7 },
       doors: [
         { x: 0, y: 7, targetRoom: 16, targetX: 17, targetY: 7 },
-        { x: 18, y: 7, targetRoom: 19, targetX: 1, targetY: 7 },
       ],
       enemies: [
         { x: 10, y: 4, type: 'slime' },
@@ -815,7 +814,7 @@ const DungeonMap = {
   },
 
   // Room 19: Glacial Hall (shop)
-  // Doors: left→18
+  // Doors: left→18, down→17
   _makeRoom19() {
     const tiles = this._parseRoom([
       'FFFFFFFFFFFFFFFFFFFF',
@@ -832,7 +831,7 @@ const DungeonMap = {
       'FI................IF',
       'FI................IF',
       'FI................IF',
-      'FFFFFFFFFFFFFFFFFFFF',
+      'FFFFFFFFFDFFFFFFFFFF',
     ]);
     return {
       name: 'Glacial Hall',
@@ -842,6 +841,7 @@ const DungeonMap = {
       playerStart: { x: 1, y: 7 },
       doors: [
         { x: 0, y: 7, targetRoom: 18, targetX: 17, targetY: 7 },
+        { x: 9, y: 14, targetRoom: 20, targetX: 9, targetY: 1 },
       ],
       enemies: [],
       shopkeeper: { x: 8, y: 12 },
@@ -849,10 +849,10 @@ const DungeonMap = {
   },
 
   // Room 20: Crystal Cavern
-  // Doors: right→18, down→22
+  // Doors: up→19, right→18, down→22
   _makeRoom20() {
     const tiles = this._parseRoom([
-      'FFFFFFFFFFFFFFFFFFFF',
+      'FFFFFFFFFDFFFFFFFFFF',
       'FI................IF',
       'FI..FF....FF..FF..IF',
       'FI..FF....FF..FF..IF',
@@ -875,6 +875,7 @@ const DungeonMap = {
       height: ROOM_H,
       playerStart: { x: 17, y: 7 },
       doors: [
+        { x: 9, y: 0, targetRoom: 19, targetX: 9, targetY: 13 },
         { x: 18, y: 7, targetRoom: 18, targetX: 1, targetY: 7 },
         { x: 9, y: 14, targetRoom: 22, targetX: 9, targetY: 1 },
       ],
