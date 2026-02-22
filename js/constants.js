@@ -17,6 +17,9 @@ const T = {
   WALL: 1,
   DOOR: 2,
   SHOP_FLOOR: 3,
+  WOOD_WALL: 4,
+  GRASS: 5,
+  TREE: 6,
 };
 
 // Colors
@@ -86,7 +89,15 @@ const STATE = {
   TRANSITION: 'TRANSITION',
   BESTIARY: 'BESTIARY',
   STORY: 'STORY',
+  VICTORY: 'VICTORY',
+  CLIFF: 'CLIFF',
+  DUNGEON_SELECT: 'DUNGEON_SELECT',
 };
+
+// Available dungeons
+const DUNGEONS = [
+  { key: 'holdens', name: "Holden's Dungeon", desc: 'The dungeon where it all began.' },
+];
 
 // Story scenes — each scene is an array of pages, each page is an array of lines
 const STORY_SCENES = {
@@ -189,6 +200,23 @@ const STORY_SCENES = {
     ],
     [
       'No turning back now.',
+    ],
+  ],
+  ending: [
+    [
+      'The last creature falls.',
+      'Silence fills the chamber.',
+      'A draft — fresh air.',
+    ],
+    [
+      'You climb through crumbling',
+      'stone, upward, until light',
+      'stings your eyes.',
+    ],
+    [
+      'A sunlit forest. Birds.',
+      'Wind through the leaves.',
+      'A small house between the trees.',
     ],
   ],
 };

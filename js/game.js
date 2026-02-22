@@ -41,6 +41,9 @@ class Game {
     // Title screen animation
     this.titleTimer = 0;
 
+    // Dungeon select cursor
+    this.dungeonCursor = 0;
+
     this.lastTime = 0;
   }
 
@@ -60,6 +63,24 @@ class Game {
     Projectiles.clear();
     Bestiary.init();
     Bestiary.reset();
+  }
+
+  startDungeon() {
+    this.state = STATE.PLAYING;
+    DungeonMap.currentRoom = 0;
+    const startRoom = DungeonMap.getRoom();
+    // Preserve coins and equipment — only reset dungeon state
+    const savedCoins = this.player ? this.player.coins : 0;
+    this.player = new Player(startRoom.playerStart.x, startRoom.playerStart.y);
+    this.player.coins = savedCoins;
+    this.totalCoins = 0;
+    this.enemiesSlain = 0;
+    this.particles = [];
+    this.clearedRooms = new Set();
+    this.playedScenes = new Set();
+    this.spawnRoom();
+    Combat.clear();
+    Projectiles.clear();
   }
 
   spawnRoom() {
@@ -216,6 +237,22 @@ class Game {
         const room = DungeonMap.getRoom();
         if (room.enemies && room.enemies.length > 0) {
           this.clearedRooms.add(DungeonMap.currentRoom);
+
+          // Victory: clearing the Throne Room (room 14) triggers the ending
+          if (DungeonMap.currentRoom === 14) {
+            this.state = STATE.STORY;
+            Story.play('ending', () => {
+              this.state = STATE.PLAYING;
+              DungeonMap.currentRoom = 15;
+              const cliffRoom = DungeonMap.getRoom();
+              this.player.snapToTile(cliffRoom.playerStart.x, cliffRoom.playerStart.y);
+              this.spawnRoom();
+              Combat.clear();
+              Projectiles.clear();
+              this.camera.snapTo(this.player, cliffRoom.width, cliffRoom.height);
+            });
+            return;
+          }
         }
       }
 
@@ -273,13 +310,35 @@ class Game {
         Bestiary.show();
       }
 
+      // DEBUG: press V to trigger victory
+      if (Input.wasPressed('KeyV')) {
+        this.state = STATE.STORY;
+        Story.play('ending', () => {
+          this.state = STATE.PLAYING;
+          DungeonMap.currentRoom = 15;
+          const cliffRoom = DungeonMap.getRoom();
+          this.player.snapToTile(cliffRoom.playerStart.x, cliffRoom.playerStart.y);
+          this.spawnRoom();
+          Combat.clear();
+          Projectiles.clear();
+          this.camera.snapTo(this.player, cliffRoom.width, cliffRoom.height);
+        });
+        return;
+      }
+
       // Shopkeeper interaction
       this._checkShopkeeper();
 
       // Check for door transitions
       const door = this.player.checkDoor();
       if (door) {
-        this.startTransition(door);
+        if (door.targetRoom === -1) {
+          // House door — open dungeon select
+          this.state = STATE.DUNGEON_SELECT;
+          this.dungeonCursor = 0;
+        } else {
+          this.startTransition(door);
+        }
       }
 
       // Camera follows player
@@ -290,6 +349,19 @@ class Game {
     if (this.state === STATE.GAME_OVER) {
       if (Input.wasPressed('Enter')) {
         this.startNewGame();
+      }
+    }
+
+    if (this.state === STATE.DUNGEON_SELECT) {
+      if (Input.wasPressed('ArrowUp')) {
+        this.dungeonCursor = Math.max(0, this.dungeonCursor - 1);
+      }
+      if (Input.wasPressed('ArrowDown')) {
+        this.dungeonCursor = Math.min(DUNGEONS.length - 1, this.dungeonCursor + 1);
+      }
+      if (Input.wasPressed('Enter')) {
+        this.state = STATE.STORY;
+        Story.play('intro', () => this.startDungeon());
       }
     }
   }
@@ -369,6 +441,11 @@ class Game {
 
     if (this.state === STATE.STORY) {
       Story.draw(ctx);
+      return;
+    }
+
+    if (this.state === STATE.DUNGEON_SELECT) {
+      this.drawDungeonSelect(ctx);
       return;
     }
 
@@ -541,6 +618,85 @@ class Game {
     ctx.font = '12px monospace';
     ctx.fillText('Press Enter to shop', CANVAS_W / 2, py + 16);
     ctx.restore();
+  }
+
+  drawDungeonSelect(ctx) {
+    // Dark dungeon background — same style as title screen
+    const t = this.titleTimer;
+
+    ctx.fillStyle = '#0d0d1a';
+    ctx.fillRect(0, 0, CANVAS_W, CANVAS_H);
+
+    // Floating dungeon bricks in background (same as title)
+    ctx.fillStyle = '#1a1a30';
+    for (let i = 0; i < 12; i++) {
+      const bx = ((i * 73 + t * 10) % (CANVAS_W + 64)) - 32;
+      const by = 80 + Math.sin(t * 0.5 + i * 1.3) * 20 + i * 30;
+      ctx.fillRect(bx, by, 48, 24);
+    }
+
+    // Overlay to darken bricks behind panel
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.85)';
+    ctx.fillRect(0, 0, CANVAS_W, CANVAS_H);
+
+    // Title
+    ctx.textAlign = 'center';
+
+    ctx.fillStyle = '#000';
+    ctx.font = 'bold 24px monospace';
+    ctx.fillText('SELECT DUNGEON', CANVAS_W / 2 + 2, 52);
+    ctx.fillStyle = COLORS.COIN;
+    ctx.font = 'bold 24px monospace';
+    ctx.fillText('SELECT DUNGEON', CANVAS_W / 2, 50);
+
+    // Coins
+    ctx.fillStyle = COLORS.TEXT;
+    ctx.font = '14px monospace';
+    ctx.fillText('Your coins: ' + (this.player ? this.player.coins : 0), CANVAS_W / 2, 75);
+
+    // Dungeon list — shop style
+    const startY = 130;
+    const lineH = 36;
+    ctx.textAlign = 'left';
+
+    for (let i = 0; i < DUNGEONS.length; i++) {
+      const d = DUNGEONS[i];
+      const y = startY + i * lineH;
+      const selected = i === this.dungeonCursor;
+
+      // Selection highlight
+      if (selected) {
+        ctx.fillStyle = 'rgba(241, 196, 15, 0.15)';
+        ctx.fillRect(120, y - 16, 400, lineH - 2);
+        ctx.strokeStyle = 'rgba(241, 196, 15, 0.3)';
+        ctx.lineWidth = 1;
+        ctx.strokeRect(120, y - 16, 400, lineH - 2);
+      }
+
+      // Cursor arrow
+      if (selected) {
+        ctx.fillStyle = COLORS.COIN;
+        ctx.font = '16px monospace';
+        ctx.fillText('>', 130, y);
+      }
+
+      // Dungeon name
+      ctx.fillStyle = COLORS.TEXT;
+      ctx.font = '14px monospace';
+      ctx.fillText(d.name, 150, y);
+
+      // Description
+      ctx.fillStyle = '#aaa';
+      ctx.fillText(d.desc, 310, y);
+    }
+
+    // Instructions
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#666';
+    ctx.font = '12px monospace';
+    ctx.fillText('Arrow keys: navigate | Enter: select dungeon', CANVAS_W / 2, CANVAS_H - 30);
+
+    ctx.textAlign = 'left';
   }
 
   drawRoomName(ctx) {

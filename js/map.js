@@ -22,6 +22,7 @@ const DungeonMap = {
       this._makeRoom12(), // Ossuary
       this._makeRoom13(), // Antechamber
       this._makeRoom14(), // Throne Room
+      this._makeRoom15(), // Cliff House
     ];
   },
 
@@ -33,6 +34,9 @@ const DungeonMap = {
         const ch = lines[y][x];
         if (ch === 'W') row.push(T.WALL);
         else if (ch === 'D') row.push(T.DOOR);
+        else if (ch === 'H') row.push(T.WOOD_WALL);
+        else if (ch === 'G') row.push(T.GRASS);
+        else if (ch === 'R') row.push(T.TREE);
         else row.push(T.FLOOR);
       }
       tiles.push(row);
@@ -634,6 +638,40 @@ const DungeonMap = {
     };
   },
 
+  // Room 15: Cliff House — hub between dungeons
+  // Left: stone cave entrance. Middle: grass with trees. Right: wooden house.
+  _makeRoom15() {
+    const tiles = this._parseRoom([
+      'RRRRRRRRRRRRRRRRRRRR',
+      'RWWWWGGGGGGGGGGGGGGR',
+      'RW..WGGRGGGGGRGGGGRG',
+      'RW..WGGGGGGGGGGGGGGG',
+      'RW..WGGGGGGGGHHHHHHR',
+      'RW..WGGRGGGGH....HGR',
+      'RW..........H....HGG',
+      'RD..........D....HGG',
+      'RW..........H....HGG',
+      'RW..WGGRGGGGH....HGR',
+      'RW..WGGGGGGGGHHHHHHR',
+      'RW..WGGGGGGGGGGGGGGG',
+      'RW..WGGRGGGGGRGGGGRG',
+      'RWWWWGGGGGGGGGGGGGGR',
+      'RRRRRRRRRRRRRRRRRRRR',
+    ]);
+    return {
+      name: 'Cliff House',
+      tiles,
+      width: ROOM_W,
+      height: ROOM_H,
+      playerStart: { x: 2, y: 7 },
+      doors: [
+        { x: 1, y: 7, targetRoom: 14, targetX: 9, targetY: 1 },
+        { x: 12, y: 7, targetRoom: -1, targetX: 0, targetY: 0 },
+      ],
+      enemies: [],
+    };
+  },
+
   getRoom() {
     return this.rooms[this.currentRoom];
   },
@@ -646,7 +684,7 @@ const DungeonMap = {
 
   isWalkable(x, y) {
     const tile = this.getTile(x, y);
-    if (tile !== T.FLOOR && tile !== T.DOOR && tile !== T.SHOP_FLOOR) return false;
+    if (tile !== T.FLOOR && tile !== T.DOOR && tile !== T.SHOP_FLOOR && tile !== T.GRASS) return false;
     // Block shopkeeper tile
     const room = this.getRoom();
     if (room.shopkeeper && room.shopkeeper.x === x && room.shopkeeper.y === y) return false;
@@ -676,8 +714,61 @@ const DungeonMap = {
 
         if (tile === T.WALL) {
           Sprites.draw(ctx, Sprites.wall, px, py);
+        } else if (tile === T.WOOD_WALL) {
+          // Wood plank wall
+          ctx.fillStyle = '#6b4c2a';
+          ctx.fillRect(px, py, TILE, TILE);
+          // Plank lines
+          ctx.fillStyle = '#5a3e20';
+          ctx.fillRect(px, py + 10, TILE, 2);
+          ctx.fillRect(px, py + 22, TILE, 2);
+          // Top highlight
+          ctx.fillStyle = '#7e5e36';
+          ctx.fillRect(px, py, TILE, 2);
+          // Bottom shadow
+          ctx.fillStyle = '#4a3018';
+          ctx.fillRect(px, py + TILE - 2, TILE, 2);
+          // Grain variation
+          const wh = (x * 11 + y * 7) & 0xFF;
+          if (wh < 100) {
+            ctx.fillStyle = '#7a5a34';
+            ctx.fillRect(px + 4, py + 2, 6, 8);
+          } else if (wh > 180) {
+            ctx.fillStyle = '#5a3a1a';
+            ctx.fillRect(px + 12, py + 14, 8, 6);
+          }
         } else if (tile === T.DOOR) {
           Sprites.draw(ctx, Sprites.door, px, py);
+        } else if (tile === T.GRASS) {
+          // Grass tile — green ground with variation
+          const gh = (x * 7 + y * 13 + x * y * 3) & 0xFF;
+          ctx.fillStyle = gh < 80 ? '#3a6b2a' : gh > 200 ? '#4a7a38' : '#3f7030';
+          ctx.fillRect(px, py, TILE, TILE);
+          // Grass blades
+          ctx.fillStyle = '#4a8a3a';
+          ctx.fillRect(px + (gh % 7) * 4 + 2, py + 4, 2, 4);
+          ctx.fillRect(px + (gh % 5) * 5 + 6, py + 18, 2, 4);
+          ctx.fillRect(px + (gh % 3) * 8 + 10, py + 10, 2, 4);
+          // Dark speckle
+          ctx.fillStyle = '#2e5a20';
+          ctx.fillRect(px + (gh % 9) * 3 + 1, py + (gh % 11) * 2 + 2, 2, 2);
+        } else if (tile === T.TREE) {
+          // Tree on grass base
+          ctx.fillStyle = '#3f7030';
+          ctx.fillRect(px, py, TILE, TILE);
+          // Trunk
+          ctx.fillStyle = '#5a3a1a';
+          ctx.fillRect(px + 12, py + 16, 8, 16);
+          // Canopy — layered circles as overlapping rects
+          ctx.fillStyle = '#2d5a1e';
+          ctx.fillRect(px + 4, py + 2, 24, 18);
+          ctx.fillRect(px + 6, py, 20, 22);
+          // Canopy highlight
+          ctx.fillStyle = '#3a7a28';
+          ctx.fillRect(px + 8, py + 2, 10, 8);
+          // Canopy shadow
+          ctx.fillStyle = '#1e4414';
+          ctx.fillRect(px + 6, py + 16, 20, 4);
         } else {
           Sprites.draw(ctx, Sprites.floor, px, py);
           // Subtle per-tile color variation using position hash
