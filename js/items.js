@@ -25,6 +25,16 @@ const ITEMS = {
                   range: 9, cooldown: 0.6, projectileSpeed: 260, projectileColor: '#8b6914', effect: null },
   fireArrows:   { name: 'Fire Arrows',     type: 'ammo',  stat: 1, desc: '+1 ATK',
                   range: 7, cooldown: 0.6, projectileSpeed: 220, projectileColor: '#e67e22', effect: 'burn' },
+
+  // Volcano reward weapons
+  meteor:       { name: 'Meteor Strike',   type: 'spell', stat: 5, desc: '+5 ATK',
+                  range: 6, cooldown: 0.9, projectileSpeed: 160, projectileColor: '#e74c3c', effect: 'burn' },
+  chainLightning: { name: 'Chain Lightning', type: 'spell', stat: 4, desc: '+4 ATK',
+                  range: 8, cooldown: 0.8, projectileSpeed: 320, projectileColor: '#f1c40f', effect: 'pierce' },
+  dragonbow:    { name: 'Dragonbow',        type: 'bow',   stat: 6, desc: '+6 ATK',
+                  range: 9, cooldown: 0.6, projectileSpeed: 300, projectileColor: '#e74c3c', effect: null },
+  explosiveArrows: { name: 'Explosive Arrows', type: 'ammo', stat: 3, desc: '+3 ATK',
+                  range: 7, cooldown: 0.6, projectileSpeed: 200, projectileColor: '#e67e22', effect: 'burn' },
 };
 
 // Shop inventory (keys into ITEMS)

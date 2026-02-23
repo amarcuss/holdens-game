@@ -44,6 +44,17 @@ const DungeonMap = {
       this._makeRoom33(), // Permafrost Chamber
       this._makeRoom34(), // Frostbound Antechamber
       this._makeRoom35(), // The Frozen Throne
+      // --- The Volcano (rooms 36-45) ---
+      this._makeRoom36(), // Volcanic Entrance
+      this._makeRoom37(), // Lava Corridor
+      this._makeRoom38(), // Volcanic Crossroads
+      this._makeRoom39(), // Magma Hall (shop)
+      this._makeRoom40(), // Ember Cavern
+      this._makeRoom41(), // Lava Bridge
+      this._makeRoom42(), // The Caldera
+      this._makeRoom43(), // Inferno Depths
+      this._makeRoom44(), // Volcanic Antechamber
+      this._makeRoom45(), // Volcano Throne
     ];
   },
 
@@ -60,6 +71,8 @@ const DungeonMap = {
         else if (ch === 'R') row.push(T.TREE);
         else if (ch === 'I') row.push(T.ICE);
         else if (ch === 'F') row.push(T.ICE_WALL);
+        else if (ch === 'L') row.push(T.LAVA);
+        else if (ch === 'V') row.push(T.LAVA_WALL);
         else row.push(T.FLOOR);
       }
       tiles.push(row);
@@ -1514,6 +1527,417 @@ const DungeonMap = {
     };
   },
 
+  // =================== THE VOLCANO (Rooms 36-45) ===================
+
+  // Room 36: Volcanic Entrance — start of dungeon 3
+  // Doors: right→37, down→38
+  _makeRoom36() {
+    const tiles = this._parseRoom([
+      'VVVVVVVVVVVVVVVVVVVV',
+      'V..................V',
+      'V..VV..........VV..V',
+      'V..VV....LL....VV..V',
+      'V........LL........V',
+      'V..................V',
+      'V..LL..........LL..V',
+      'V..LL..........LL.DV',
+      'V..LL..........LL..V',
+      'V..................V',
+      'V........LL........V',
+      'V..VV....LL....VV..V',
+      'V..VV..........VV..V',
+      'V..................V',
+      'VVVVVVVVVDVVVVVVVVVV',
+    ]);
+    return {
+      name: 'Volcanic Entrance',
+      tiles,
+      width: ROOM_W,
+      height: ROOM_H,
+      playerStart: { x: 10, y: 2 },
+      doors: [
+        { x: 18, y: 7, targetRoom: 37, targetX: 1, targetY: 7 },
+        { x: 9, y: 14, targetRoom: 38, targetX: 9, targetY: 1 },
+      ],
+      enemies: [
+        { x: 5, y: 5, type: 'magma_imp' },
+        { x: 14, y: 5, type: 'magma_imp' },
+        { x: 10, y: 10, type: 'magma_imp' },
+      ],
+    };
+  },
+
+  // Room 37: Lava Corridor — dead end, rewards exploration
+  // Doors: left→36
+  _makeRoom37() {
+    const tiles = this._parseRoom([
+      'VVVVVVVVVVVVVVVVVVVV',
+      'V..................V',
+      'V.LL..............LV',
+      'V.LL...............V',
+      'V..................V',
+      'V.......VV.........V',
+      'V.......VV.........V',
+      'D..................V',
+      'V.......VV.........V',
+      'V.......VV.........V',
+      'V..................V',
+      'V.LL...............V',
+      'V.LL..............LV',
+      'V..................V',
+      'VVVVVVVVVVVVVVVVVVVV',
+    ]);
+    return {
+      name: 'Lava Corridor',
+      tiles,
+      width: ROOM_W,
+      height: ROOM_H,
+      playerStart: { x: 1, y: 7 },
+      doors: [
+        { x: 0, y: 7, targetRoom: 36, targetX: 17, targetY: 7 },
+      ],
+      enemies: [
+        { x: 10, y: 3, type: 'magma_imp' },
+        { x: 15, y: 7, type: 'magma_imp' },
+        { x: 10, y: 11, type: 'magma_imp' },
+        { x: 5, y: 7, type: 'magma_imp' },
+        { x: 14, y: 10, type: 'obsidian_guardian' },
+      ],
+    };
+  },
+
+  // Room 38: Volcanic Crossroads — hub room
+  // Doors: up→36, right→39, left→40, down→41
+  _makeRoom38() {
+    const tiles = this._parseRoom([
+      'VVVVVVVVVDVVVVVVVVVV',
+      'V..................V',
+      'V..VV..........VV..V',
+      'V..................V',
+      'V......LLLLLL......V',
+      'V......L....L......V',
+      'V......L....L......V',
+      'D......L....L.....DV',
+      'V......L....L......V',
+      'V......L....L......V',
+      'V......LLLLLL......V',
+      'V..................V',
+      'V..VV..........VV..V',
+      'V..................V',
+      'VVVVVVVVVDVVVVVVVVVV',
+    ]);
+    return {
+      name: 'Volcanic Crossroads',
+      tiles,
+      width: ROOM_W,
+      height: ROOM_H,
+      playerStart: { x: 9, y: 1 },
+      doors: [
+        { x: 9, y: 0, targetRoom: 36, targetX: 9, targetY: 13 },
+        { x: 18, y: 7, targetRoom: 39, targetX: 1, targetY: 7 },
+        { x: 0, y: 7, targetRoom: 40, targetX: 17, targetY: 7 },
+        { x: 9, y: 14, targetRoom: 41, targetX: 9, targetY: 1 },
+      ],
+      enemies: [
+        { x: 4, y: 3, type: 'magma_imp' },
+        { x: 15, y: 3, type: 'magma_imp' },
+        { x: 4, y: 11, type: 'magma_imp' },
+        { x: 15, y: 11, type: 'magma_imp' },
+        { x: 3, y: 7, type: 'flame_caster' },
+        { x: 16, y: 7, type: 'flame_caster' },
+      ],
+    };
+  },
+
+  // Room 39: Magma Hall (shop) — safe room with lava moat
+  // Doors: left→38
+  _makeRoom39() {
+    const tiles = this._parseRoom([
+      'VVVVVVVVVVVVVVVVVVVV',
+      'V..................V',
+      'V..LLLLLLLLLLLLLL..V',
+      'V..L............L..V',
+      'V..L............L..V',
+      'V..L............L..V',
+      'V..L............L..V',
+      'D..L............L..V',
+      'V..L............L..V',
+      'V..L............L..V',
+      'V..L............L..V',
+      'V..L............L..V',
+      'V..LLLLLLLLLLLLLL..V',
+      'V..................V',
+      'VVVVVVVVVVVVVVVVVVVV',
+    ]);
+    return {
+      name: 'Magma Hall',
+      tiles,
+      width: ROOM_W,
+      height: ROOM_H,
+      playerStart: { x: 1, y: 7 },
+      doors: [
+        { x: 0, y: 7, targetRoom: 38, targetX: 17, targetY: 7 },
+      ],
+      enemies: [],
+      shopkeeper: { x: 9, y: 11 },
+    };
+  },
+
+  // Room 40: Ember Cavern — scattered lava pools + pillars
+  // Doors: right→38, down→42
+  _makeRoom40() {
+    const tiles = this._parseRoom([
+      'VVVVVVVVVVVVVVVVVVVV',
+      'V..................V',
+      'V..VV....LL....VV..V',
+      'V..VV....LL....VV..V',
+      'V..................V',
+      'V.....LL....LL.....V',
+      'V.....LL....LL.....V',
+      'V.................DV',
+      'V.....LL....LL.....V',
+      'V.....LL....LL.....V',
+      'V..................V',
+      'V..VV....LL....VV..V',
+      'V..VV....LL....VV..V',
+      'V..................V',
+      'VVVVVVVVVDVVVVVVVVVV',
+    ]);
+    return {
+      name: 'Ember Cavern',
+      tiles,
+      width: ROOM_W,
+      height: ROOM_H,
+      playerStart: { x: 17, y: 7 },
+      doors: [
+        { x: 18, y: 7, targetRoom: 38, targetX: 1, targetY: 7 },
+        { x: 9, y: 14, targetRoom: 42, targetX: 9, targetY: 1 },
+      ],
+      enemies: [
+        { x: 9, y: 4, type: 'magma_imp' },
+        { x: 3, y: 7, type: 'magma_imp' },
+        { x: 14, y: 7, type: 'magma_imp' },
+        { x: 9, y: 10, type: 'obsidian_guardian' },
+        { x: 15, y: 4, type: 'obsidian_guardian' },
+        { x: 5, y: 10, type: 'flame_caster' },
+      ],
+    };
+  },
+
+  // Room 41: Lava Bridge — narrow paths through lava fields
+  // Doors: up→38, down→43
+  _makeRoom41() {
+    const tiles = this._parseRoom([
+      'VVVVVVVVVDVVVVVVVVVV',
+      'V..................V',
+      'V.LLL..........LLL.V',
+      'V.LLL..........LLL.V',
+      'V.LLL..VV..VV..LLL.V',
+      'V......VV..VV......V',
+      'V.LLL..........LLL.V',
+      'V.LLL..........LLL.V',
+      'V.LLL..........LLL.V',
+      'V......VV..VV......V',
+      'V.LLL..VV..VV..LLL.V',
+      'V.LLL..........LLL.V',
+      'V.LLL..........LLL.V',
+      'V..................V',
+      'VVVVVVVVVDVVVVVVVVVV',
+    ]);
+    return {
+      name: 'Lava Bridge',
+      tiles,
+      width: ROOM_W,
+      height: ROOM_H,
+      playerStart: { x: 9, y: 1 },
+      doors: [
+        { x: 9, y: 0, targetRoom: 38, targetX: 9, targetY: 13 },
+        { x: 9, y: 14, targetRoom: 43, targetX: 9, targetY: 1 },
+      ],
+      enemies: [
+        { x: 9, y: 3, type: 'magma_imp' },
+        { x: 9, y: 7, type: 'magma_imp' },
+        { x: 9, y: 11, type: 'magma_imp' },
+        { x: 5, y: 7, type: 'magma_imp' },
+        { x: 14, y: 3, type: 'flame_caster' },
+        { x: 5, y: 11, type: 'flame_caster' },
+      ],
+    };
+  },
+
+  // Room 42: The Caldera — large central lava lake
+  // Doors: up→40, down→44
+  _makeRoom42() {
+    const tiles = this._parseRoom([
+      'VVVVVVVVVDVVVVVVVVVV',
+      'V..................V',
+      'V..VV..........VV..V',
+      'V....LLLLLLLLLL....V',
+      'V....LLLLLLLLLL....V',
+      'V....LLLLLLLLLL....V',
+      'V....LLLLLLLLLL....V',
+      'V....LLLLLLLLLL....V',
+      'V....LLLLLLLLLL....V',
+      'V....LLLLLLLLLL....V',
+      'V....LLLLLLLLLL....V',
+      'V..................V',
+      'V..VV..........VV..V',
+      'V..................V',
+      'VVVVVVVVVDVVVVVVVVVV',
+    ]);
+    return {
+      name: 'The Caldera',
+      tiles,
+      width: ROOM_W,
+      height: ROOM_H,
+      playerStart: { x: 9, y: 1 },
+      doors: [
+        { x: 9, y: 0, targetRoom: 40, targetX: 9, targetY: 13 },
+        { x: 9, y: 14, targetRoom: 44, targetX: 9, targetY: 1 },
+      ],
+      enemies: [
+        { x: 2, y: 2, type: 'magma_imp' },
+        { x: 17, y: 2, type: 'magma_imp' },
+        { x: 2, y: 7, type: 'obsidian_guardian' },
+        { x: 17, y: 7, type: 'obsidian_guardian' },
+        { x: 2, y: 12, type: 'flame_caster' },
+        { x: 17, y: 12, type: 'flame_caster' },
+        { x: 9, y: 12, type: 'flame_caster' },
+      ],
+    };
+  },
+
+  // Room 43: Inferno Depths — dense pillars + lava veins, gauntlet
+  // Doors: up→41, left→44
+  _makeRoom43() {
+    const tiles = this._parseRoom([
+      'VVVVVVVVVDVVVVVVVVVV',
+      'V..................V',
+      'V..VV..LL....VV..L.V',
+      'V..VV..LL....VV....V',
+      'V........VV........V',
+      'V.LL.....VV....LL..V',
+      'V.LL...........LL..V',
+      'D..................V',
+      'V..LL...........LL.V',
+      'V..LL....VV....LL..V',
+      'V........VV........V',
+      'V..VV..LL....VV....V',
+      'V..VV..LL....VV..L.V',
+      'V..................V',
+      'VVVVVVVVVVVVVVVVVVVV',
+    ]);
+    return {
+      name: 'Inferno Depths',
+      tiles,
+      width: ROOM_W,
+      height: ROOM_H,
+      playerStart: { x: 9, y: 1 },
+      doors: [
+        { x: 9, y: 0, targetRoom: 41, targetX: 9, targetY: 13 },
+        { x: 0, y: 7, targetRoom: 44, targetX: 17, targetY: 7 },
+      ],
+      enemies: [
+        { x: 5, y: 3, type: 'magma_imp' },
+        { x: 14, y: 3, type: 'magma_imp' },
+        { x: 9, y: 7, type: 'magma_imp' },
+        { x: 5, y: 7, type: 'obsidian_guardian' },
+        { x: 14, y: 7, type: 'obsidian_guardian' },
+        { x: 3, y: 11, type: 'flame_caster' },
+        { x: 9, y: 11, type: 'flame_caster' },
+        { x: 16, y: 11, type: 'flame_caster' },
+      ],
+    };
+  },
+
+  // Room 44: Volcanic Antechamber — grand pillared room, pre-boss
+  // Doors: up→42, right→43, down→45
+  _makeRoom44() {
+    const tiles = this._parseRoom([
+      'VVVVVVVVVDVVVVVVVVVV',
+      'V..................V',
+      'V..VV..........VV..V',
+      'V..VV..........VV..V',
+      'V..................V',
+      'V......VV.VV.......V',
+      'V..................V',
+      'V.................DV',
+      'V..................V',
+      'V......VV.VV.......V',
+      'V..................V',
+      'V..VV..........VV..V',
+      'V..VV..........VV..V',
+      'V..................V',
+      'VVVVVVVVVDVVVVVVVVVV',
+    ]);
+    return {
+      name: 'Volcanic Antechamber',
+      tiles,
+      width: ROOM_W,
+      height: ROOM_H,
+      playerStart: { x: 9, y: 1 },
+      doors: [
+        { x: 9, y: 0, targetRoom: 42, targetX: 9, targetY: 13 },
+        { x: 18, y: 7, targetRoom: 43, targetX: 1, targetY: 7 },
+        { x: 9, y: 14, targetRoom: 45, targetX: 9, targetY: 1 },
+      ],
+      enemies: [
+        { x: 5, y: 4, type: 'magma_imp' },
+        { x: 14, y: 4, type: 'magma_imp' },
+        { x: 5, y: 10, type: 'magma_imp' },
+        { x: 14, y: 10, type: 'obsidian_guardian' },
+        { x: 3, y: 7, type: 'obsidian_guardian' },
+        { x: 16, y: 7, type: 'flame_caster' },
+        { x: 9, y: 10, type: 'flame_caster' },
+      ],
+    };
+  },
+
+  // Room 45: Volcano Throne — boss arena with lava X-pattern
+  // Doors: up→44
+  _makeRoom45() {
+    const tiles = this._parseRoom([
+      'VVVVVVVVVDVVVVVVVVVV',
+      'V..................V',
+      'V.LL............LL.V',
+      'V..LL..........LL..V',
+      'V...LL........LL...V',
+      'V....LL......LL....V',
+      'V.....LL....LL.....V',
+      'V......LL..LL......V',
+      'V.....LL....LL.....V',
+      'V....LL......LL....V',
+      'V...LL........LL...V',
+      'V..LL..........LL..V',
+      'V.LL............LL.V',
+      'V..................V',
+      'VVVVVVVVVVVVVVVVVVVV',
+    ]);
+    return {
+      name: 'Volcano Throne',
+      tiles,
+      width: ROOM_W,
+      height: ROOM_H,
+      playerStart: { x: 9, y: 1 },
+      doors: [
+        { x: 9, y: 0, targetRoom: 44, targetX: 9, targetY: 13 },
+      ],
+      enemies: [
+        { x: 5, y: 2, type: 'magma_imp' },
+        { x: 14, y: 2, type: 'magma_imp' },
+        { x: 5, y: 12, type: 'magma_imp' },
+        { x: 14, y: 12, type: 'magma_imp' },
+        { x: 3, y: 7, type: 'magma_imp' },
+        { x: 16, y: 7, type: 'magma_imp' },
+        { x: 7, y: 5, type: 'obsidian_guardian' },
+        { x: 12, y: 9, type: 'obsidian_guardian' },
+        { x: 7, y: 9, type: 'flame_caster' },
+        { x: 12, y: 5, type: 'flame_caster' },
+        { x: 9, y: 7, type: 'volcano_lord' },
+      ],
+    };
+  },
+
   getRoom() {
     return this.rooms[this.currentRoom];
   },
@@ -1526,7 +1950,7 @@ const DungeonMap = {
 
   isWalkable(x, y) {
     const tile = this.getTile(x, y);
-    if (tile !== T.FLOOR && tile !== T.DOOR && tile !== T.SHOP_FLOOR && tile !== T.GRASS && tile !== T.ICE) return false;
+    if (tile !== T.FLOOR && tile !== T.DOOR && tile !== T.SHOP_FLOOR && tile !== T.GRASS && tile !== T.ICE && tile !== T.LAVA) return false;
     // Block shopkeeper tile
     const room = this.getRoom();
     if (room.shopkeeper && room.shopkeeper.x === x && room.shopkeeper.y === y) return false;
@@ -1633,6 +2057,30 @@ const DungeonMap = {
           const iwh = (x * 11 + y * 7) & 0xFF;
           if (iwh < 60) {
             ctx.fillStyle = 'rgba(160,210,240,0.08)';
+            ctx.fillRect(px + 4, py + 6, 8, 4);
+          }
+        } else if (tile === T.LAVA) {
+          Sprites.draw(ctx, Sprites.lavaFloor, px, py);
+          // Per-tile warm variation
+          const lh = (x * 7 + y * 13 + x * y * 3) & 0xFF;
+          if (lh < 80) {
+            ctx.fillStyle = 'rgba(255,100,20,0.08)';
+            ctx.fillRect(px, py, TILE, TILE);
+          } else if (lh > 200) {
+            ctx.fillStyle = 'rgba(255,160,40,0.06)';
+            ctx.fillRect(px, py, TILE, TILE);
+          }
+          // Lava glow speckle
+          if (lh % 11 === 0) {
+            ctx.fillStyle = '#cc5500';
+            ctx.fillRect(px + (lh % 6) * 5 + 2, py + (lh % 5) * 5 + 4, 2, 2);
+          }
+        } else if (tile === T.LAVA_WALL) {
+          Sprites.draw(ctx, Sprites.lavaWall, px, py);
+          // Heat shimmer
+          const lwh = (x * 11 + y * 7) & 0xFF;
+          if (lwh < 60) {
+            ctx.fillStyle = 'rgba(255,120,40,0.08)';
             ctx.fillRect(px + 4, py + 6, 8, 4);
           }
         } else {

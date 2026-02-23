@@ -113,6 +113,10 @@ const Sprites = {
     this._initIceGolem();
     this._initFrostWraith();
     this._initCryomancer();
+    this._initMagmaImp();
+    this._initObsidianGuardian();
+    this._initFlameCaster();
+    this._initVolcanoLord();
 
     // --- Shopkeeper sprite ---
     this.shopkeeper = this._parse([
@@ -155,6 +159,10 @@ const Sprites = {
     // --- Ice tiles ---
     this.iceFloor = this._makeIceFloor();
     this.iceWall = this._makeIceWall();
+
+    // --- Lava tiles ---
+    this.lavaFloor = this._makeLavaFloor();
+    this.lavaWall = this._makeLavaWall();
   },
 
   _initSlime() {
@@ -712,6 +720,96 @@ const Sprites = {
       'Y': '#f1c40f', 'O': '#e67e22', 'R': '#e74c3c',
       'A': '#bbb', 'S': '#8b6914', 'L': '#c0392b', '.': null,
     });
+
+    // Meteor Strike: fiery orb atop a dark staff
+    this.meteorIcon = this._parse([
+      '......RRYY......',
+      '.....ROYYYO.....',
+      '....ROYYYOOR....',
+      '....OYYYYYOR....',
+      '.....ROYYYO.....',
+      '......ROOR......',
+      '......MMM.......',
+      '......SSS.......',
+      '......SDS.......',
+      '......SSS.......',
+      '......SDS.......',
+      '......SSS.......',
+      '......SDS.......',
+      '......SSS.......',
+      '......DDD.......',
+      '................',
+    ], {
+      'R': '#e74c3c', 'O': '#e67e22', 'Y': '#f1c40f',
+      'M': '#d4a017', 'S': '#5a3a1a', 'D': '#3a2208', '.': null,
+    });
+
+    // Chain Lightning: branching bolt
+    this.chainLightningIcon = this._parse([
+      '................',
+      '.........WO.....',
+      '........WYO.....',
+      '.......WYO......',
+      '......WYO..WO...',
+      '.....WYYYYWYO...',
+      '.........YO.....',
+      '........WYO.....',
+      '.......WYO......',
+      '......WYO.......',
+      '.....WYYYYO.....',
+      '........YO......',
+      '.......YO.......',
+      '.......O........',
+      '................',
+      '................',
+    ], {
+      'Y': '#f1c40f', 'W': '#fff8dc', 'O': '#e67e22', '.': null,
+    });
+
+    // Dragonbow: ornate red bow with gold tips
+    this.dragonbowIcon = this._parse([
+      '................',
+      '......GGRL......',
+      '.....RRR.L......',
+      '....RRR..L......',
+      '...RRR...L......',
+      '...RRR...L......',
+      '...RRB...L......',
+      '..RBBB...L......',
+      '...RRB...L......',
+      '...RRR...L......',
+      '...RRR...L......',
+      '....RRR..L......',
+      '.....RRR.L......',
+      '......GGRL......',
+      '................',
+      '................',
+    ], {
+      'R': '#8a2200', 'G': '#d4a017', 'B': '#3a1008', 'L': '#c0b8a8', '.': null,
+    });
+
+    // Explosive Arrows: arrow with fiery blast tip
+    this.explosiveArrowsIcon = this._parse([
+      '................',
+      '......RYR.......',
+      '.....RYYYR......',
+      '....ROYYYRO.....',
+      '.....ROYRO......',
+      '......ROO.......',
+      '.......AA.......',
+      '.......SS.......',
+      '.......SS.......',
+      '.......SS.......',
+      '.......SS.......',
+      '......LSSL......',
+      '.....L.SS.L.....',
+      '....L..SS..L....',
+      '................',
+      '................',
+    ], {
+      'Y': '#f1c40f', 'O': '#e67e22', 'R': '#e74c3c',
+      'A': '#bbb', 'S': '#8b6914', 'L': '#e74c3c', '.': null,
+    });
   },
 
   _initBook() {
@@ -809,6 +907,184 @@ const Sprites = {
     return s;
   },
 
+  _initMagmaImp() {
+    const pal = {
+      'B': COLORS.IMP_BODY, 'D': COLORS.IMP_DARK,
+      'L': COLORS.IMP_LIGHT, 'H': COLORS.IMP_HORN,
+      'E': COLORS.IMP_EYE, '.': null,
+    };
+
+    // Small horned demon (same all directions)
+    this.magmaImpDown = this._parse([
+      '.......HH.......',
+      '......H..H......',
+      '.....H....H.....',
+      '......BBBB......',
+      '.....LLBBBB.....',
+      '....LLBBBBBB....',
+      '....LBBEBBEB....',
+      '....BBBBBBBB....',
+      '....BBBBBBBB....',
+      '...DBBBBBBBBD...',
+      '...DBBBBBBBBDD..',
+      '...DDBBBBBBDD...',
+      '....DDDDDDDD....',
+      '....D......D....',
+      '...DD......DD...',
+      '................',
+    ], pal);
+
+    this.magmaImpUp = this.magmaImpDown;
+    this.magmaImpLeft = this.magmaImpDown;
+    this.magmaImpRight = this.magmaImpDown;
+    this.magmaImpSprites = [this.magmaImpUp, this.magmaImpDown, this.magmaImpLeft, this.magmaImpRight];
+  },
+
+  _initObsidianGuardian() {
+    const pal = {
+      'B': COLORS.OBSIDIAN_BODY, 'D': COLORS.OBSIDIAN_DARK,
+      'L': COLORS.OBSIDIAN_LIGHT, 'C': COLORS.OBSIDIAN_CORE,
+      'E': COLORS.OBSIDIAN_EYE, '.': null,
+    };
+
+    // Bulky dark stone humanoid with orange core (same all directions)
+    this.obsidianGuardianDown = this._parse([
+      '......LLLL......',
+      '.....LBBBBL.....',
+      '....LBBCCBBL....',
+      '....LBCEECBL....',
+      '....DBBCCBBD....',
+      '.....DBBBD......',
+      '...DDBBBBBBDD...',
+      '..DBBBBCBBBBBDD.',
+      '..DBBBBBBBBBBD..',
+      '..DDBBBBBBBDDD..',
+      '...DDDBBBBDD....',
+      '....DDBBBBDD....',
+      '....DB.DD.BD....',
+      '...DB..DD..BD...',
+      '...DD..DD..DD...',
+      '................',
+    ], pal);
+
+    this.obsidianGuardianUp = this.obsidianGuardianDown;
+    this.obsidianGuardianLeft = this.obsidianGuardianDown;
+    this.obsidianGuardianRight = this.obsidianGuardianDown;
+    this.obsidianGuardianSprites = [this.obsidianGuardianUp, this.obsidianGuardianDown, this.obsidianGuardianLeft, this.obsidianGuardianRight];
+  },
+
+  _initFlameCaster() {
+    const pal = {
+      'R': COLORS.FLAME_ROBE, 'H': COLORS.FLAME_HOOD,
+      'S': COLORS.FLAME_SKIN, 'E': COLORS.FLAME_EYE,
+      'T': COLORS.FLAME_STAFF, 'D': '#3a1008', '.': null,
+    };
+
+    // Robed fire mage with staff (facing down)
+    this.flameCasterDown = this._parse([
+      '......HHHH......',
+      '.....HHHHHH.....',
+      '.....HHSSHH.....',
+      '.....HSESHH.....',
+      '.....HHSSHH.....',
+      '......HHHH......',
+      '.....RRRRRR.....',
+      '....RRRRRRRR.T..',
+      '....RRRRRRRR.T..',
+      '....RR.RR.RR.T..',
+      '....RR.RR.RR.T..',
+      '.......DD....T..',
+      '......DDDD...T..',
+      '......DD.DD.TT..',
+      '......DD.DD.....',
+      '......DD.DD.....',
+    ], pal);
+
+    // Facing up
+    this.flameCasterUp = this._parse([
+      '......HHHH......',
+      '.....HHHHHH.....',
+      '.....HHHHHH.....',
+      '.....HHHHHH.....',
+      '.....HHHHHH.....',
+      '......HHHH......',
+      '.....RRRRRR.....',
+      '..T.RRRRRRRR....',
+      '..T.RRRRRRRR....',
+      '..T.RR.RR.RR....',
+      '..T.RR.RR.RR....',
+      '..T....DD.......',
+      '..T...DDDD......',
+      '..TT.DD.DD......',
+      '.....DD.DD......',
+      '.....DD.DD......',
+    ], pal);
+
+    // Facing left
+    this.flameCasterLeft = this._parse([
+      '......HHHH......',
+      '.....HHHHHH.....',
+      '....SSHHHH......',
+      '....SEHHHH......',
+      '....SSHHHH......',
+      '.....HHH........',
+      '..T.RRRRRR......',
+      '..T.RRRRRRRR....',
+      '..T.RRRRRRRR....',
+      '..T.RRRRRRRR....',
+      '..TT.RRR.RRR....',
+      '.......DDD......',
+      '......DDDD......',
+      '......DD.DD.....',
+      '......DD.DD.....',
+      '......DD.DD.....',
+    ], pal);
+
+    // Facing right
+    this.flameCasterRight = this._parse([
+      '......HHHH......',
+      '.....HHHHHH.....',
+      '......HHHHSS....',
+      '......HHHHES....',
+      '......HHHHSS....',
+      '........HHH.....',
+      '......RRRRRR.T..',
+      '....RRRRRRRR.T..',
+      '....RRRRRRRR.T..',
+      '....RRRRRRRR.T..',
+      '....RRR.RRR.TT..',
+      '......DDD.......',
+      '......DDDD......',
+      '......DD.DD.....',
+      '......DD.DD.....',
+      '......DD.DD.....',
+    ], pal);
+
+    this.flameCasterSprites = [this.flameCasterUp, this.flameCasterDown, this.flameCasterLeft, this.flameCasterRight];
+  },
+
+  _initVolcanoLord() {
+    // Scale the magma imp sprite 2x to make a 32x32 boss
+    const imp16 = this.magmaImpDown;
+    const lord32 = [];
+    for (let y = 0; y < 16; y++) {
+      const row1 = [];
+      const row2 = [];
+      for (let x = 0; x < 16; x++) {
+        const c = imp16[y][x];
+        row1.push(c, c);
+        row2.push(c, c);
+      }
+      lord32.push(row1, row2);
+    }
+    this.volcanoLordDown = lord32;
+
+    this.volcanoLordUp = this.volcanoLordDown;
+    this.volcanoLordLeft = this.volcanoLordDown;
+    this.volcanoLordRight = this.volcanoLordDown;
+    this.volcanoLordSprites = [this.volcanoLordUp, this.volcanoLordDown, this.volcanoLordLeft, this.volcanoLordRight];
+  },
+
   _makeIceFloor() {
     const s = [];
     for (let y = 0; y < SPRITE_SIZE; y++) {
@@ -838,6 +1114,42 @@ const Sprites = {
           row.push('#2e3e58');
         } else {
           row.push(COLORS.ICE_WALL_DARK);
+        }
+      }
+      s.push(row);
+    }
+    return s;
+  },
+
+  _makeLavaFloor() {
+    const s = [];
+    for (let y = 0; y < SPRITE_SIZE; y++) {
+      const row = [];
+      for (let x = 0; x < SPRITE_SIZE; x++) {
+        if (x === 0 || y === 0) {
+          row.push('#6a2a1a');
+        } else {
+          row.push(COLORS.LAVA_FLOOR1);
+        }
+      }
+      s.push(row);
+    }
+    return s;
+  },
+
+  _makeLavaWall() {
+    const s = [];
+    for (let y = 0; y < SPRITE_SIZE; y++) {
+      const row = [];
+      for (let x = 0; x < SPRITE_SIZE; x++) {
+        if (y < 4) {
+          row.push(COLORS.LAVA_WALL_TOP);
+        } else if (x === 0 || x === 15 || y === 4) {
+          row.push('#2e1810');
+        } else if (y === 9 || y === 10) {
+          row.push('#2e1810');
+        } else {
+          row.push(COLORS.LAVA_WALL_DARK);
         }
       }
       s.push(row);

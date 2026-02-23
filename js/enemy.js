@@ -383,6 +383,10 @@ class Enemy extends Entity {
     if (this.type === 'ice_golem') return Sprites.iceGolemSprites;
     if (this.type === 'frost_wraith') return Sprites.frostWraithSprites;
     if (this.type === 'cryomancer') return Sprites.cryomancerSprites;
+    if (this.type === 'magma_imp') return Sprites.magmaImpSprites;
+    if (this.type === 'obsidian_guardian') return Sprites.obsidianGuardianSprites;
+    if (this.type === 'flame_caster') return Sprites.flameCasterSprites;
+    if (this.type === 'volcano_lord') return Sprites.volcanoLordSprites;
     return Sprites.skeletonSprites;
   }
 
@@ -475,5 +479,49 @@ Enemy.TYPES = {
     projectileColor: '#6ac8e8',
     projectileEffect: 'freeze',
     projectileType: 'staff',
+  },
+  magma_imp: {
+    hp: 8,
+    speed: 4.0,
+    chaseRange: 6,
+    damage: 4,
+    attackRate: 0.6,
+    xp: 5,
+    coinDrop: { min: 3, max: 6 },
+  },
+  obsidian_guardian: {
+    hp: 18,
+    speed: 0.8,
+    chaseRange: 4,
+    damage: 5,
+    attackRate: 2.0,
+    xp: 8,
+    coinDrop: { min: 5, max: 9 },
+    knockbackResist: true,
+  },
+  flame_caster: {
+    hp: 7,
+    speed: 1.5,
+    chaseRange: 8,
+    damage: 3,
+    attackRate: 2.0,
+    xp: 7,
+    coinDrop: { min: 4, max: 8 },
+    preferredRange: 4,
+    projectileSpeed: 200,
+    projectileColor: '#e67e22',
+    projectileEffect: 'burn',
+    projectileType: 'staff',
+  },
+  volcano_lord: {
+    hp: 25,
+    speed: 1.5,
+    chaseRange: 5,
+    damage: 6,
+    attackRate: 1.2,
+    xp: 15,
+    coinDrop: { min: 8, max: 15 },
+    tileW: 2,
+    tileH: 2,
   },
 };

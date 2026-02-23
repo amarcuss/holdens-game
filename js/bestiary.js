@@ -39,6 +39,26 @@ const BESTIARY_DATA = {
     flavor: 'An ice mage who commands the cold itself. Its freezing bolts slow all who they touch to a crawl.',
     getSprite() { return Sprites.cryomancerDown; },
   },
+  magma_imp: {
+    name: 'Magma Imp',
+    flavor: 'A small horned demon born from volcanic vents. Blindingly fast and vicious, it strikes before you can react.',
+    getSprite() { return Sprites.magmaImpDown; },
+  },
+  obsidian_guardian: {
+    name: 'Obsidian Guardian',
+    flavor: 'A hulking construct of volcanic rock with a molten core. Nearly immovable and utterly relentless.',
+    getSprite() { return Sprites.obsidianGuardianDown; },
+  },
+  flame_caster: {
+    name: 'Flame Caster',
+    flavor: 'A robed fire mage who hurls burning projectiles from afar. Its flames linger and sear.',
+    getSprite() { return Sprites.flameCasterDown; },
+  },
+  volcano_lord: {
+    name: 'Volcano Lord',
+    flavor: 'The master of the mountain. A massive demon that splits into lesser imps upon defeat.',
+    getSprite() { return Sprites.magmaImpDown; },
+  },
 };
 
 const ALL_TYPES = Object.keys(BESTIARY_DATA);
@@ -304,6 +324,10 @@ const Bestiary = {
       lightning: Sprites.lightningIcon,
       longbow: Sprites.longbowIcon,
       fireArrows: Sprites.fireArrowsIcon,
+      meteor: Sprites.meteorIcon,
+      chainLightning: Sprites.chainLightningIcon,
+      dragonbow: Sprites.dragonbowIcon,
+      explosiveArrows: Sprites.explosiveArrowsIcon,
     };
     return sprites[itemKey] || null;
   },

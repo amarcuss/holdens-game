@@ -282,6 +282,16 @@ class Game {
         }
       }
 
+      // Lava damage: hurt player when standing on lava
+      if (!this.player.moving && DungeonMap.getTile(this.player.tileX, this.player.tileY) === T.LAVA) {
+        if (this.player.hurtTimer <= 0) {
+          this.player.takeDamage(1);
+          this.player.hurtTimer = 0.5;
+          Combat.addDamageNumber(this.player.tileX, this.player.tileY, 1, '#e67e22');
+          this.shake(2, 0.1);
+        }
+      }
+
       // Update enemies
       for (const enemy of this.enemies) {
         enemy.update(dt, this.player, this.enemies);
@@ -312,12 +322,27 @@ class Game {
             s2.idleTime = 0;
             this.enemies.push(s1, s2);
           }
+          // Volcano lord splits into 3 magma imps on death
+          if (enemy.type === 'volcano_lord') {
+            const positions = [
+              { x: enemy.tileX, y: enemy.tileY },
+              { x: enemy.tileX + 1, y: enemy.tileY },
+              { x: enemy.tileX, y: enemy.tileY + 1 },
+            ];
+            for (const pos of positions) {
+              const imp = new Enemy(pos.x, pos.y, 'magma_imp');
+              imp.aiState = AI.CHASE;
+              imp.idleTime = 0;
+              this.enemies.push(imp);
+            }
+          }
           this.enemies.splice(i, 1);
         }
       }
 
-      // Mark room as cleared when all enemies are dead
-      if (this.enemies.length === 0 && !this.clearedRooms.has(DungeonMap.currentRoom)) {
+      // Mark room as cleared when all enemies are dead (including mid-death-animation)
+      const allDefeated = this.enemies.length === 0 || this.enemies.every(e => !e.alive);
+      if (allDefeated && !this.clearedRooms.has(DungeonMap.currentRoom)) {
         const room = DungeonMap.getRoom();
         if (room.enemies && room.enemies.length > 0) {
           this.clearedRooms.add(DungeonMap.currentRoom);
@@ -563,6 +588,53 @@ class Game {
         });
       } else {
         // No weapon path set — just teleport
+        this._teleportToHub();
+      }
+    } else if (bossRoom === 45) {
+      // Volcano dungeon: reward depends on weapon path
+      if (this.weaponPath === 'staff') {
+        this.state = STATE.REWARD_CHOICE;
+        Reward.show('Master a Spell', [
+          {
+            key: 'meteor',
+            name: 'Meteor Strike',
+            stat: '+5 ATK',
+            desc: 'A blazing meteor that burns enemies on impact.',
+            sprite: Sprites.meteorIcon,
+          },
+          {
+            key: 'chainLightning',
+            name: 'Chain Lightning',
+            stat: '+4 ATK',
+            desc: 'Lightning that pierces through all enemies in a line.',
+            sprite: Sprites.chainLightningIcon,
+          },
+        ], (chosenKey) => {
+          Inventory.equipRanged(chosenKey);
+          this._teleportToHub();
+        });
+      } else if (this.weaponPath === 'bow') {
+        this.state = STATE.REWARD_CHOICE;
+        Reward.show('Forge a Weapon', [
+          {
+            key: 'dragonbow',
+            name: 'Dragonbow',
+            stat: '+6 ATK',
+            desc: 'A bow forged in dragonfire. Raw destructive power.',
+            sprite: Sprites.dragonbowIcon,
+          },
+          {
+            key: 'explosiveArrows',
+            name: 'Explosive Arrows',
+            stat: '+3 ATK',
+            desc: 'Arrows that explode on impact, burning the target.',
+            sprite: Sprites.explosiveArrowsIcon,
+          },
+        ], (chosenKey) => {
+          Inventory.equipRanged(chosenKey);
+          this._teleportToHub();
+        });
+      } else {
         this._teleportToHub();
       }
     } else {

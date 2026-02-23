@@ -45,6 +45,20 @@ const DungeonMapOverlay = {
     35: { col: 1, row: 10, label: 'Throne' },
   },
 
+  // Dungeon 3: rooms 36-45
+  _dungeon3Layout: {
+    36: { col: 2, row: 0, label: 'Entrance' },
+    37: { col: 3, row: 0, label: 'Corridor' },
+    38: { col: 2, row: 1, label: 'Crossroads' },
+    39: { col: 3, row: 1, label: 'Shop' },
+    40: { col: 1, row: 1, label: 'Cavern' },
+    41: { col: 2, row: 2, label: 'Bridge' },
+    42: { col: 1, row: 2, label: 'Caldera' },
+    43: { col: 2, row: 3, label: 'Depths' },
+    44: { col: 1, row: 3, label: 'Antechamber' },
+    45: { col: 1, row: 4, label: 'Throne' },
+  },
+
   // Door connections per dungeon (derived from room data)
   _getConnections(layout) {
     const connections = [];
@@ -88,7 +102,10 @@ const DungeonMapOverlay = {
     const currentRoom = DungeonMap.currentRoom;
     let layout, dungeonName;
 
-    if (currentRoom >= 16 && currentRoom <= 35) {
+    if (currentRoom >= 36 && currentRoom <= 45) {
+      layout = this._dungeon3Layout;
+      dungeonName = 'The Volcano';
+    } else if (currentRoom >= 16 && currentRoom <= 35) {
       layout = this._dungeon2Layout;
       dungeonName = 'The Frozen Depths';
     } else if (currentRoom <= 14) {

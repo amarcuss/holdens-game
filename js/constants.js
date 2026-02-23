@@ -22,6 +22,8 @@ const T = {
   TREE: 6,
   ICE: 7,
   ICE_WALL: 8,
+  LAVA: 9,
+  LAVA_WALL: 10,
 };
 
 // Colors
@@ -109,6 +111,42 @@ const COLORS = {
   CRYO_EYE: '#4af0ff',
   CRYO_STAFF: '#6ac8e8',
 
+  // Lava tiles
+  LAVA_FLOOR1: '#8a3a2a',
+  LAVA_FLOOR2: '#7a3020',
+  LAVA_WALL_DARK: '#4a2020',
+  LAVA_WALL_LIGHT: '#5a2a2a',
+  LAVA_WALL_TOP: '#3a1818',
+
+  // Magma Imp
+  IMP_BODY: '#cc4422',
+  IMP_DARK: '#993311',
+  IMP_LIGHT: '#ee6633',
+  IMP_HORN: '#ffaa22',
+  IMP_EYE: '#ffff00',
+
+  // Obsidian Guardian
+  OBSIDIAN_BODY: '#3a3a3a',
+  OBSIDIAN_DARK: '#2a2a2a',
+  OBSIDIAN_LIGHT: '#5a5a5a',
+  OBSIDIAN_CORE: '#ee6622',
+  OBSIDIAN_EYE: '#ff4400',
+
+  // Flame Caster
+  FLAME_ROBE: '#8a2200',
+  FLAME_HOOD: '#661800',
+  FLAME_SKIN: '#e8a880',
+  FLAME_EYE: '#ff6600',
+  FLAME_STAFF: '#ee6622',
+
+  // Volcano Lord
+  VLORD_BODY: '#882200',
+  VLORD_DARK: '#661800',
+  VLORD_LIGHT: '#aa3300',
+  VLORD_CORE: '#ff6600',
+  VLORD_EYE: '#ffcc00',
+  VLORD_HORN: '#ffaa22',
+
   // UI
   BG: '#1a1a2e',
   TEXT: '#eee',
@@ -136,6 +174,7 @@ const STATE = {
 const DUNGEONS = [
   { key: 'holdens', name: "Holden's Dungeon", desc: 'The dungeon where it all began.', startRoom: 0, bossRoom: 14, introScene: 'intro', endingScene: 'ending' },
   { key: 'frozen', name: 'The Frozen Depths', desc: 'An ancient dungeon sealed in ice.', startRoom: 16, bossRoom: 35, introScene: 'frozen_intro', endingScene: 'frozen_ending' },
+  { key: 'volcano', name: 'The Volcano', desc: 'A blazing hell beneath the mountain.', startRoom: 36, bossRoom: 45, introScene: 'volcano_intro', endingScene: 'volcano_ending' },
 ];
 
 // Story scenes — each scene is an array of pages, each page is an array of lines
@@ -379,6 +418,129 @@ const STORY_SCENES = {
       'The cliff house stands warm.',
     ],
   ],
+
+  // --- Volcano stories ---
+  volcano_intro: [
+    [
+      'A crack in the mountainside',
+      'breathes scorching heat.',
+      'The air shimmers red.',
+    ],
+    [
+      'The stone throbs underfoot.',
+      'A heartbeat. Something down',
+      'here is still alive.',
+    ],
+    [
+      'Sweat beads on the blade.',
+      'Down. Into the heat.',
+    ],
+  ],
+  volcanic_crossroads: [
+    [
+      'Lava channels carve the',
+      'stone in every direction.',
+      'The rock glows beneath you.',
+    ],
+    [
+      'Small shapes dart through',
+      'the flames — imps, giggling',
+      'as they burn.',
+    ],
+  ],
+  magma_hall: [
+    [
+      'A merchant perches on',
+      'cooled obsidian, sweat-',
+      'soaked and grinning.',
+    ],
+    [
+      '"Everything melts down',
+      'here. Might as well spend',
+      'it before you do."',
+    ],
+  ],
+  ember_cavern: [
+    [
+      'The ceiling drips with',
+      'molten stone. Pools of lava',
+      'bubble and hiss.',
+    ],
+    [
+      'Dark shapes stand still',
+      'among the pillars — guardians',
+      'of living obsidian.',
+    ],
+  ],
+  caldera: [
+    [
+      'A vast lake of magma',
+      'stretches before you.',
+      'The far shore ripples.',
+    ],
+    [
+      'Robed figures raise staffs',
+      'across the lava. Fire rains',
+      'from their hands.',
+    ],
+  ],
+  inferno_depths: [
+    [
+      'The tunnels narrow and',
+      'twist. Lava veins pulse',
+      'through the walls.',
+    ],
+    [
+      'Every step brings more.',
+      'Imps. Obsidian. Flame.',
+      'The mountain tests you.',
+    ],
+  ],
+  volcano_antechamber: [
+    [
+      'The tunnel opens into',
+      'a hall of carved basalt.',
+      'Runes glow in the stone.',
+    ],
+    [
+      'The mountain groans.',
+      'Beyond the far arch,',
+      'something breathes.',
+    ],
+  ],
+  volcano_throne: [
+    [
+      'A throne of slag and ember',
+      'glows at the chamber\'s core.',
+      'The air itself burns.',
+    ],
+    [
+      'The ground splits open.',
+      'A massive figure rises',
+      'from the lava.',
+    ],
+    [
+      'It sees you.',
+      'Finish it.',
+    ],
+  ],
+  volcano_ending: [
+    [
+      'The last ember dies.',
+      'The mountain shudders and',
+      'the lava begins to cool.',
+    ],
+    [
+      'Obsidian hardens beneath',
+      'your feet. A path opens',
+      'through cooling stone.',
+    ],
+    [
+      'You emerge into cool air.',
+      'The cliff house waits.',
+      'The mountain sleeps.',
+    ],
+  ],
 };
 
 // Map room indices to story scene keys (played on first entry)
@@ -399,6 +561,14 @@ const ROOM_STORIES = {
   31: 'glacial_depths',
   34: 'frostbound_antechamber',
   35: 'frozen_throne',
+  // Volcano
+  38: 'volcanic_crossroads',
+  39: 'magma_hall',
+  40: 'ember_cavern',
+  42: 'caldera',
+  43: 'inferno_depths',
+  44: 'volcano_antechamber',
+  45: 'volcano_throne',
 };
 
 // Directions
