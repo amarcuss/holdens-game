@@ -728,9 +728,9 @@ const DungeonMap = {
         { x: 9, y: 14, targetRoom: 18, targetX: 9, targetY: 1 },
       ],
       enemies: [
-        { x: 5, y: 5, type: 'slime' },
+        { x: 5, y: 5, type: 'frost_wraith' },
         { x: 14, y: 5, type: 'frost_sprite' },
-        { x: 10, y: 10, type: 'slime' },
+        { x: 10, y: 10, type: 'frost_wraith' },
       ],
     };
   },
@@ -765,9 +765,9 @@ const DungeonMap = {
         { x: 0, y: 7, targetRoom: 16, targetX: 17, targetY: 7 },
       ],
       enemies: [
-        { x: 10, y: 4, type: 'slime' },
+        { x: 10, y: 4, type: 'frost_wraith' },
         { x: 8, y: 10, type: 'frost_sprite' },
-        { x: 15, y: 7, type: 'slime' },
+        { x: 15, y: 7, type: 'frost_wraith' },
       ],
     };
   },
@@ -807,8 +807,8 @@ const DungeonMap = {
       enemies: [
         { x: 4, y: 4, type: 'frost_sprite' },
         { x: 15, y: 4, type: 'frost_sprite' },
-        { x: 4, y: 10, type: 'slime' },
-        { x: 15, y: 10, type: 'slime' },
+        { x: 4, y: 10, type: 'frost_wraith' },
+        { x: 15, y: 10, type: 'frost_wraith' },
       ],
     };
   },
@@ -881,10 +881,10 @@ const DungeonMap = {
       ],
       enemies: [
         { x: 5, y: 5, type: 'frost_sprite' },
-        { x: 14, y: 5, type: 'skeleton' },
-        { x: 5, y: 9, type: 'skeleton' },
+        { x: 14, y: 5, type: 'frost_wraith' },
+        { x: 5, y: 9, type: 'frost_wraith' },
         { x: 14, y: 9, type: 'frost_sprite' },
-        { x: 9, y: 7, type: 'archer' },
+        { x: 9, y: 7, type: 'cryomancer' },
       ],
     };
   },
@@ -922,8 +922,8 @@ const DungeonMap = {
       enemies: [
         { x: 5, y: 4, type: 'frost_sprite' },
         { x: 14, y: 4, type: 'frost_sprite' },
-        { x: 9, y: 7, type: 'skeleton' },
-        { x: 5, y: 10, type: 'archer' },
+        { x: 9, y: 7, type: 'frost_wraith' },
+        { x: 5, y: 10, type: 'cryomancer' },
       ],
     };
   },
@@ -960,10 +960,10 @@ const DungeonMap = {
       ],
       enemies: [
         { x: 9, y: 5, type: 'frost_sprite' },
-        { x: 5, y: 7, type: 'skeleton' },
-        { x: 14, y: 7, type: 'skeleton' },
+        { x: 5, y: 7, type: 'frost_wraith' },
+        { x: 14, y: 7, type: 'frost_wraith' },
         { x: 9, y: 9, type: 'frost_sprite' },
-        { x: 3, y: 3, type: 'archer' },
+        { x: 3, y: 3, type: 'cryomancer' },
       ],
     };
   },
@@ -999,11 +999,11 @@ const DungeonMap = {
         { x: 9, y: 14, targetRoom: 25, targetX: 9, targetY: 1 },
       ],
       enemies: [
-        { x: 5, y: 4, type: 'skeleton' },
-        { x: 14, y: 4, type: 'skeleton' },
+        { x: 5, y: 4, type: 'frost_wraith' },
+        { x: 14, y: 4, type: 'frost_wraith' },
         { x: 5, y: 8, type: 'frost_sprite' },
         { x: 14, y: 8, type: 'frost_sprite' },
-        { x: 9, y: 12, type: 'archer' },
+        { x: 9, y: 12, type: 'cryomancer' },
       ],
     };
   },
@@ -1041,10 +1041,10 @@ const DungeonMap = {
       ],
       enemies: [
         { x: 9, y: 5, type: 'frost_sprite' },
-        { x: 5, y: 7, type: 'skeleton' },
-        { x: 14, y: 7, type: 'skeleton' },
+        { x: 5, y: 7, type: 'ice_golem' },
+        { x: 14, y: 7, type: 'frost_wraith' },
         { x: 9, y: 9, type: 'frost_sprite' },
-        { x: 9, y: 12, type: 'archer' },
+        { x: 9, y: 12, type: 'cryomancer' },
       ],
     };
   },
@@ -1082,9 +1082,9 @@ const DungeonMap = {
       enemies: [
         { x: 5, y: 3, type: 'frost_sprite' },
         { x: 14, y: 3, type: 'frost_sprite' },
-        { x: 9, y: 7, type: 'skeleton' },
-        { x: 5, y: 11, type: 'archer' },
-        { x: 14, y: 11, type: 'archer' },
+        { x: 9, y: 7, type: 'ice_golem' },
+        { x: 5, y: 11, type: 'cryomancer' },
+        { x: 14, y: 11, type: 'cryomancer' },
       ],
     };
   },
@@ -1122,11 +1122,11 @@ const DungeonMap = {
       ],
       enemies: [
         { x: 8, y: 5, type: 'frost_sprite' },
-        { x: 4, y: 3, type: 'skeleton' },
-        { x: 15, y: 3, type: 'skeleton' },
+        { x: 4, y: 3, type: 'frost_wraith' },
+        { x: 15, y: 3, type: 'frost_wraith' },
         { x: 4, y: 11, type: 'frost_sprite' },
-        { x: 15, y: 11, type: 'archer' },
-        { x: 8, y: 9, type: 'archer' },
+        { x: 15, y: 11, type: 'cryomancer' },
+        { x: 8, y: 9, type: 'cryomancer' },
       ],
     };
   },
@@ -1164,10 +1164,10 @@ const DungeonMap = {
       enemies: [
         { x: 2, y: 2, type: 'frost_sprite' },
         { x: 16, y: 2, type: 'frost_sprite' },
-        { x: 2, y: 12, type: 'skeleton' },
-        { x: 16, y: 12, type: 'skeleton' },
+        { x: 2, y: 12, type: 'ice_golem' },
+        { x: 16, y: 12, type: 'frost_wraith' },
         { x: 9, y: 7, type: 'frost_sprite' },
-        { x: 14, y: 5, type: 'archer' },
+        { x: 14, y: 5, type: 'cryomancer' },
       ],
     };
   },
@@ -1205,10 +1205,10 @@ const DungeonMap = {
       enemies: [
         { x: 5, y: 3, type: 'frost_sprite' },
         { x: 14, y: 3, type: 'frost_sprite' },
-        { x: 9, y: 7, type: 'skeleton' },
-        { x: 5, y: 11, type: 'skeleton' },
-        { x: 14, y: 11, type: 'archer' },
-        { x: 10, y: 5, type: 'archer' },
+        { x: 9, y: 7, type: 'ice_golem' },
+        { x: 5, y: 11, type: 'frost_wraith' },
+        { x: 14, y: 11, type: 'cryomancer' },
+        { x: 10, y: 5, type: 'cryomancer' },
       ],
     };
   },
@@ -1244,12 +1244,12 @@ const DungeonMap = {
         { x: 18, y: 7, targetRoom: 30, targetX: 1, targetY: 7 },
       ],
       enemies: [
-        { x: 5, y: 5, type: 'skeleton' },
-        { x: 14, y: 5, type: 'skeleton' },
+        { x: 5, y: 5, type: 'frost_wraith' },
+        { x: 14, y: 5, type: 'frost_wraith' },
         { x: 9, y: 7, type: 'frost_sprite' },
         { x: 5, y: 9, type: 'frost_sprite' },
-        { x: 14, y: 9, type: 'archer' },
-        { x: 10, y: 12, type: 'skeleton' },
+        { x: 14, y: 9, type: 'cryomancer' },
+        { x: 10, y: 12, type: 'ice_golem' },
       ],
     };
   },
@@ -1288,10 +1288,10 @@ const DungeonMap = {
       enemies: [
         { x: 3, y: 4, type: 'frost_sprite' },
         { x: 16, y: 4, type: 'frost_sprite' },
-        { x: 3, y: 10, type: 'skeleton' },
-        { x: 16, y: 10, type: 'skeleton' },
-        { x: 9, y: 1, type: 'archer' },
-        { x: 9, y: 13, type: 'archer' },
+        { x: 3, y: 10, type: 'ice_golem' },
+        { x: 16, y: 10, type: 'frost_wraith' },
+        { x: 9, y: 1, type: 'cryomancer' },
+        { x: 9, y: 13, type: 'cryomancer' },
         { x: 3, y: 7, type: 'frost_sprite' },
       ],
     };
@@ -1330,11 +1330,11 @@ const DungeonMap = {
       enemies: [
         { x: 6, y: 3, type: 'frost_sprite' },
         { x: 14, y: 3, type: 'frost_sprite' },
-        { x: 9, y: 7, type: 'skeleton' },
-        { x: 5, y: 7, type: 'skeleton' },
-        { x: 14, y: 7, type: 'skeleton' },
-        { x: 6, y: 11, type: 'archer' },
-        { x: 14, y: 11, type: 'archer' },
+        { x: 9, y: 7, type: 'ice_golem' },
+        { x: 5, y: 7, type: 'frost_wraith' },
+        { x: 14, y: 7, type: 'frost_wraith' },
+        { x: 6, y: 11, type: 'cryomancer' },
+        { x: 14, y: 11, type: 'cryomancer' },
         { x: 9, y: 11, type: 'frost_sprite' },
       ],
     };
@@ -1373,11 +1373,11 @@ const DungeonMap = {
       enemies: [
         { x: 3, y: 3, type: 'frost_sprite' },
         { x: 16, y: 3, type: 'frost_sprite' },
-        { x: 9, y: 5, type: 'skeleton' },
-        { x: 3, y: 7, type: 'skeleton' },
-        { x: 16, y: 7, type: 'skeleton' },
-        { x: 9, y: 9, type: 'archer' },
-        { x: 3, y: 11, type: 'archer' },
+        { x: 9, y: 5, type: 'ice_golem' },
+        { x: 3, y: 7, type: 'frost_wraith' },
+        { x: 16, y: 7, type: 'frost_wraith' },
+        { x: 9, y: 9, type: 'cryomancer' },
+        { x: 3, y: 11, type: 'cryomancer' },
         { x: 16, y: 11, type: 'frost_sprite' },
       ],
     };
@@ -1416,11 +1416,11 @@ const DungeonMap = {
       enemies: [
         { x: 5, y: 4, type: 'frost_sprite' },
         { x: 14, y: 4, type: 'frost_sprite' },
-        { x: 10, y: 7, type: 'skeleton' },
-        { x: 5, y: 7, type: 'archer' },
-        { x: 14, y: 7, type: 'archer' },
-        { x: 5, y: 10, type: 'skeleton' },
-        { x: 14, y: 10, type: 'skeleton' },
+        { x: 10, y: 7, type: 'ice_golem' },
+        { x: 5, y: 7, type: 'cryomancer' },
+        { x: 14, y: 7, type: 'cryomancer' },
+        { x: 5, y: 10, type: 'frost_wraith' },
+        { x: 14, y: 10, type: 'frost_wraith' },
         { x: 9, y: 12, type: 'frost_sprite' },
       ],
     };
@@ -1459,11 +1459,11 @@ const DungeonMap = {
       enemies: [
         { x: 5, y: 4, type: 'frost_sprite' },
         { x: 14, y: 4, type: 'frost_sprite' },
-        { x: 5, y: 10, type: 'skeleton' },
-        { x: 14, y: 10, type: 'skeleton' },
-        { x: 3, y: 7, type: 'archer' },
-        { x: 16, y: 7, type: 'archer' },
-        { x: 9, y: 4, type: 'skeleton' },
+        { x: 5, y: 10, type: 'ice_golem' },
+        { x: 14, y: 10, type: 'ice_golem' },
+        { x: 3, y: 7, type: 'cryomancer' },
+        { x: 16, y: 7, type: 'cryomancer' },
+        { x: 9, y: 4, type: 'frost_wraith' },
         { x: 9, y: 10, type: 'frost_sprite' },
       ],
     };
@@ -1499,16 +1499,16 @@ const DungeonMap = {
         { x: 9, y: 0, targetRoom: 34, targetX: 9, targetY: 13 },
       ],
       enemies: [
-        { x: 6, y: 2, type: 'archer' },
-        { x: 14, y: 2, type: 'archer' },
+        { x: 6, y: 2, type: 'cryomancer' },
+        { x: 14, y: 2, type: 'cryomancer' },
         { x: 6, y: 12, type: 'frost_sprite' },
         { x: 14, y: 12, type: 'frost_sprite' },
-        { x: 3, y: 7, type: 'frost_sprite' },
-        { x: 16, y: 7, type: 'frost_sprite' },
-        { x: 8, y: 5, type: 'skeleton' },
-        { x: 12, y: 5, type: 'skeleton' },
-        { x: 8, y: 9, type: 'skeleton' },
-        { x: 12, y: 9, type: 'skeleton' },
+        { x: 3, y: 7, type: 'ice_golem' },
+        { x: 16, y: 7, type: 'ice_golem' },
+        { x: 8, y: 5, type: 'frost_wraith' },
+        { x: 12, y: 5, type: 'frost_wraith' },
+        { x: 8, y: 9, type: 'frost_sprite' },
+        { x: 12, y: 9, type: 'frost_sprite' },
         { x: 9, y: 7, type: 'brute' },
       ],
     };

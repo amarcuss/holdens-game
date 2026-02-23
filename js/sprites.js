@@ -110,6 +110,9 @@ const Sprites = {
     this._initArcher();
     this._initBrute();
     this._initFrostSprite();
+    this._initIceGolem();
+    this._initFrostWraith();
+    this._initCryomancer();
 
     // --- Shopkeeper sprite ---
     this.shopkeeper = this._parse([
@@ -418,6 +421,161 @@ const Sprites = {
     this.frostSpriteLeft = this.frostSpriteDown;
     this.frostSpriteRight = this.frostSpriteDown;
     this.frostSpriteSprites = [this.frostSpriteUp, this.frostSpriteDown, this.frostSpriteLeft, this.frostSpriteRight];
+  },
+
+  _initIceGolem() {
+    const pal = {
+      'B': COLORS.GOLEM_BODY, 'D': COLORS.GOLEM_DARK,
+      'L': COLORS.GOLEM_LIGHT, 'C': COLORS.GOLEM_CORE,
+      'E': COLORS.GOLEM_EYE, '.': null,
+    };
+
+    // Bulky crystalline humanoid (same all directions)
+    this.iceGolemDown = this._parse([
+      '......LLLL......',
+      '.....LBBBBL.....',
+      '....LBBCCBBL....',
+      '....LBCEECBL....',
+      '....DBBCCBBD....',
+      '.....DBBBD......',
+      '...DDBBBBBBDD...',
+      '..DBBBBBBBBBBDD.',
+      '..DBBBBBBBBBBD..',
+      '..DDBBBBBBBDDD..',
+      '...DDDBBBBDD....',
+      '....DDBBBBDD....',
+      '....DB.DD.BD....',
+      '...DB..DD..BD...',
+      '...DD..DD..DD...',
+      '................',
+    ], pal);
+
+    this.iceGolemUp = this.iceGolemDown;
+    this.iceGolemLeft = this.iceGolemDown;
+    this.iceGolemRight = this.iceGolemDown;
+    this.iceGolemSprites = [this.iceGolemUp, this.iceGolemDown, this.iceGolemLeft, this.iceGolemRight];
+  },
+
+  _initFrostWraith() {
+    const pal = {
+      'C': COLORS.WRAITH_CLOAK, 'B': COLORS.WRAITH_BODY,
+      'G': COLORS.WRAITH_GLOW, 'E': COLORS.WRAITH_EYE, '.': null,
+    };
+
+    // Ghostly hooded figure with wispy bottom
+    this.frostWraithDown = this._parse([
+      '......CCCC......',
+      '.....CCCCCC.....',
+      '....CCCCCCCC....',
+      '....CCECCECCC...',
+      '....CCCCCCCC....',
+      '.....CCCCCC.....',
+      '....BBBBBBBB....',
+      '...BBBBBGBBBB...',
+      '...BBBBBBBBBB...',
+      '...BBBGBBBBBB...',
+      '....BBBBBBBB....',
+      '....BGBBGBBB....',
+      '.....BGBGBB.....',
+      '......G..G......',
+      '.......G........',
+      '................',
+    ], pal);
+
+    this.frostWraithUp = this.frostWraithDown;
+    this.frostWraithLeft = this.frostWraithDown;
+    this.frostWraithRight = this.frostWraithDown;
+    this.frostWraithSprites = [this.frostWraithUp, this.frostWraithDown, this.frostWraithLeft, this.frostWraithRight];
+  },
+
+  _initCryomancer() {
+    const pal = {
+      'R': COLORS.CRYO_ROBE, 'H': COLORS.CRYO_HOOD,
+      'S': COLORS.CRYO_SKIN, 'E': COLORS.CRYO_EYE,
+      'T': COLORS.CRYO_STAFF, 'D': '#1a2040', '.': null,
+    };
+
+    // Robed ice mage with staff (facing down)
+    this.cryomancerDown = this._parse([
+      '......HHHH......',
+      '.....HHHHHH.....',
+      '.....HHSSHH.....',
+      '.....HSESHH.....',
+      '.....HHSSHH.....',
+      '......HHHH......',
+      '.....RRRRRR.....',
+      '....RRRRRRRR.T..',
+      '....RRRRRRRR.T..',
+      '....RR.RR.RR.T..',
+      '....RR.RR.RR.T..',
+      '.......DD....T..',
+      '......DDDD...T..',
+      '......DD.DD.TT..',
+      '......DD.DD.....',
+      '......DD.DD.....',
+    ], pal);
+
+    // Facing up
+    this.cryomancerUp = this._parse([
+      '......HHHH......',
+      '.....HHHHHH.....',
+      '.....HHHHHH.....',
+      '.....HHHHHH.....',
+      '.....HHHHHH.....',
+      '......HHHH......',
+      '.....RRRRRR.....',
+      '..T.RRRRRRRR....',
+      '..T.RRRRRRRR....',
+      '..T.RR.RR.RR....',
+      '..T.RR.RR.RR....',
+      '..T....DD.......',
+      '..T...DDDD......',
+      '..TT.DD.DD......',
+      '.....DD.DD......',
+      '.....DD.DD......',
+    ], pal);
+
+    // Facing left
+    this.cryomancerLeft = this._parse([
+      '......HHHH......',
+      '.....HHHHHH.....',
+      '....SSHHHH......',
+      '....SEHHHH......',
+      '....SSHHHH......',
+      '.....HHH........',
+      '..T.RRRRRR......',
+      '..T.RRRRRRRR....',
+      '..T.RRRRRRRR....',
+      '..T.RRRRRRRR....',
+      '..TT.RRR.RRR....',
+      '.......DDD......',
+      '......DDDD......',
+      '......DD.DD.....',
+      '......DD.DD.....',
+      '......DD.DD.....',
+    ], pal);
+
+    // Facing right
+    this.cryomancerRight = this._parse([
+      '......HHHH......',
+      '.....HHHHHH.....',
+      '......HHHHSS....',
+      '......HHHHES....',
+      '......HHHHSS....',
+      '........HHH.....',
+      '......RRRRRR.T..',
+      '....RRRRRRRR.T..',
+      '....RRRRRRRR.T..',
+      '....RRRRRRRR.T..',
+      '....RRR.RRR.TT..',
+      '......DDD.......',
+      '......DDDD......',
+      '......DD.DD.....',
+      '......DD.DD.....',
+      '......DD.DD.....',
+    ], pal);
+
+    this.cryomancerSprites = [this.cryomancerUp, this.cryomancerDown, this.cryomancerLeft, this.cryomancerRight];
   },
 
   _initWeaponSprites() {

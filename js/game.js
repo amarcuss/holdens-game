@@ -35,6 +35,9 @@ class Game {
     // Track which rooms have been cleared of enemies
     this.clearedRooms = new Set();
 
+    // Track which rooms the player has visited (for map overlay)
+    this.visitedRooms = new Set();
+
     // Track which story scenes have been played
     this.playedScenes = new Set();
 
@@ -71,6 +74,8 @@ class Game {
     this.enemiesSlain = 0;
     this.particles = [];
     this.clearedRooms = new Set();
+    this.visitedRooms = new Set();
+    this.visitedRooms.add(0);
     this.playedScenes = new Set();
     this.spawnRoom();
     Combat.clear();
@@ -105,6 +110,8 @@ class Game {
     this.enemiesSlain = 0;
     this.particles = [];
     this.clearedRooms = new Set();
+    this.visitedRooms = new Set();
+    this.visitedRooms.add(this.currentDungeon.startRoom);
     this.playedScenes = new Set();
     this.spawnRoom();
     Combat.clear();
@@ -244,6 +251,14 @@ class Game {
       return;
     }
 
+    if (this.state === STATE.MAP) {
+      DungeonMapOverlay.update(dt);
+      if (!DungeonMapOverlay.open) {
+        this.state = STATE.PLAYING;
+      }
+      return;
+    }
+
     if (this.state === STATE.REWARD_CHOICE) {
       Reward.update(dt);
       return;
@@ -378,6 +393,12 @@ class Game {
       if (Input.wasPressed('KeyB')) {
         this.state = STATE.BESTIARY;
         Bestiary.show();
+      }
+
+      // Open map
+      if (Input.wasPressed('KeyM')) {
+        this.state = STATE.MAP;
+        DungeonMapOverlay.show();
       }
 
       // DEBUG: press V to trigger victory
@@ -563,6 +584,7 @@ class Game {
       if (this.transitionAlpha >= 1) {
         this.transitionAlpha = 1;
         DungeonMap.currentRoom = this.pendingDoor.targetRoom;
+        this.visitedRooms.add(DungeonMap.currentRoom);
         this.player.snapToTile(this.pendingDoor.targetX, this.pendingDoor.targetY);
         this.spawnRoom();
         Combat.clear();
@@ -628,7 +650,8 @@ class Game {
     }
 
     if (this.state === STATE.PLAYING || this.state === STATE.SHOP ||
-        this.state === STATE.GAME_OVER || this.state === STATE.BESTIARY || this.transitioning) {
+        this.state === STATE.GAME_OVER || this.state === STATE.BESTIARY ||
+        this.state === STATE.MAP || this.transitioning) {
       // Draw room
       DungeonMap.drawRoom(ctx, this.camera);
 
@@ -703,6 +726,10 @@ class Game {
       Bestiary.draw(ctx);
     }
 
+    if (this.state === STATE.MAP) {
+      DungeonMapOverlay.draw(ctx, this.visitedRooms);
+    }
+
     if (this.state === STATE.GAME_OVER) {
       this.drawGameOver(ctx);
     }
@@ -762,7 +789,7 @@ class Game {
     // Controls info
     ctx.fillStyle = '#555';
     ctx.font = '12px monospace';
-    ctx.fillText('Arrows: Move | Space: Melee | X: Ranged | Enter: Interact', CANVAS_W / 2, 420);
+    ctx.fillText('Arrows: Move | Space: Melee | X: Ranged | M: Map | Enter: Interact', CANVAS_W / 2, 420);
 
     ctx.textAlign = 'left';
   }

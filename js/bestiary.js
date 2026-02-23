@@ -24,6 +24,21 @@ const BESTIARY_DATA = {
     flavor: 'A crystalline entity born from ancient ice. It drifts silently through frozen halls, striking with bitter cold.',
     getSprite() { return Sprites.frostSpriteDown; },
   },
+  ice_golem: {
+    name: 'Ice Golem',
+    flavor: 'A towering construct of frozen stone. It moves slowly but hits like an avalanche. Knockback has no effect on it.',
+    getSprite() { return Sprites.iceGolemDown; },
+  },
+  frost_wraith: {
+    name: 'Frost Wraith',
+    flavor: 'A spectral figure that phases through attacks. Its ghostly form makes it difficult to land a solid hit.',
+    getSprite() { return Sprites.frostWraithDown; },
+  },
+  cryomancer: {
+    name: 'Cryomancer',
+    flavor: 'An ice mage who commands the cold itself. Its freezing bolts slow all who they touch to a crawl.',
+    getSprite() { return Sprites.cryomancerDown; },
+  },
 };
 
 const ALL_TYPES = Object.keys(BESTIARY_DATA);

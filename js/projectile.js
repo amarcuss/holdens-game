@@ -1,7 +1,7 @@
 const Projectiles = {
   arrows: [],
 
-  shoot(fromTileX, fromTileY, direction, damage, speed) {
+  shoot(fromTileX, fromTileY, direction, damage, speed, opts) {
     this.arrows.push({
       x: fromTileX * TILE + TILE / 2,
       y: fromTileY * TILE + TILE / 2,
@@ -11,6 +11,9 @@ const Projectiles = {
       damage: damage,
       alive: true,
       source: 'enemy',
+      color: opts && opts.color || null,
+      effect: opts && opts.effect || null,
+      type: opts && opts.type || null,
     });
   },
 
@@ -66,6 +69,10 @@ const Projectiles = {
           player.takeDamage(damage);
           player.hurtTimer = 0.5;
           Combat.addDamageNumber(player.tileX, player.tileY, damage, '#e74c3c');
+          // Apply freeze effect to player
+          if (a.effect === 'freeze') {
+            player.freezeTimer = 1.5;
+          }
           this.arrows.splice(i, 1);
         }
       } else if (a.source === 'player' && enemies) {
@@ -108,8 +115,8 @@ const Projectiles = {
       const sx = a.x - camera.x;
       const sy = a.y - camera.y;
 
-      if (a.source === 'player' && a.type === 'staff') {
-        // Magic bolt: glowing circle
+      if (a.type === 'staff') {
+        // Magic bolt: glowing circle (player or enemy cryomancer)
         this._drawMagicBolt(ctx, sx, sy, a);
       } else {
         // Arrow (enemy or player bow)

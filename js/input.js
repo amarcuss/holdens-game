@@ -5,7 +5,7 @@ const Input = {
 
   init() {
     window.addEventListener('keydown', (e) => {
-      if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space', 'Enter', 'Escape', 'KeyB', 'KeyX'].includes(e.code)) {
+      if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space', 'Enter', 'Escape', 'KeyB', 'KeyX', 'KeyM'].includes(e.code)) {
         e.preventDefault();
       }
       if (e.repeat) return; // ignore OS key repeat

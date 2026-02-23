@@ -89,6 +89,26 @@ const COLORS = {
   FROST_CORE: '#e0f4ff',
   FROST_EYE: '#1a3050',
 
+  // Ice Golem
+  GOLEM_BODY: '#5a7a8a',
+  GOLEM_DARK: '#3a5a6a',
+  GOLEM_LIGHT: '#8aaaba',
+  GOLEM_CORE: '#b0d8f0',
+  GOLEM_EYE: '#4af0ff',
+
+  // Frost Wraith
+  WRAITH_CLOAK: '#2a3a5a',
+  WRAITH_BODY: '#3a4a6a',
+  WRAITH_GLOW: '#6ac8e8',
+  WRAITH_EYE: '#80ffff',
+
+  // Cryomancer
+  CRYO_ROBE: '#2a4a7a',
+  CRYO_HOOD: '#1a3060',
+  CRYO_SKIN: '#c0d8e8',
+  CRYO_EYE: '#4af0ff',
+  CRYO_STAFF: '#6ac8e8',
+
   // UI
   BG: '#1a1a2e',
   TEXT: '#eee',
@@ -109,6 +129,7 @@ const STATE = {
   CLIFF: 'CLIFF',
   DUNGEON_SELECT: 'DUNGEON_SELECT',
   REWARD_CHOICE: 'REWARD_CHOICE',
+  MAP: 'MAP',
 };
 
 // Available dungeons

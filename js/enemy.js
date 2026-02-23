@@ -125,9 +125,10 @@ class Enemy extends Entity {
         if (this.aiTimer >= 0.4) {
           this.aiTimer = 0;
 
-          // Archer: ranged AI
-          if (this.type === 'archer') {
-            this._archerChase(dx, dy, dist, player, enemies);
+          // Ranged AI (archer, cryomancer, etc.)
+          const config = Enemy.TYPES[this.type];
+          if (config.preferredRange) {
+            this._rangedChase(dx, dy, dist, player, enemies);
             return;
           }
 
@@ -175,15 +176,19 @@ class Enemy extends Entity {
     }
   }
 
-  _archerChase(dx, dy, dist, player, enemies) {
-    const config = Enemy.TYPES.archer;
+  _rangedChase(dx, dy, dist, player, enemies) {
+    const config = Enemy.TYPES[this.type];
 
     // Always prioritize shooting if we have LOS and cooldown is ready
     const losDir = this._getLineOfSight(player);
     if (losDir !== null && this.attackCooldown <= 0) {
       this.facing = losDir;
       this.attackCooldown = this.attackRate;
-      Projectiles.shoot(this.tileX, this.tileY, losDir, this.attackDamage, config.projectileSpeed);
+      Projectiles.shoot(this.tileX, this.tileY, losDir, this.attackDamage, config.projectileSpeed, {
+        color: config.projectileColor || null,
+        effect: config.projectileEffect || null,
+        type: config.projectileType || null,
+      });
       return;
     }
 
@@ -375,6 +380,9 @@ class Enemy extends Entity {
     if (this.type === 'archer') return Sprites.archerSprites;
     if (this.type === 'brute') return Sprites.bruteSprites;
     if (this.type === 'frost_sprite') return Sprites.frostSpriteSprites;
+    if (this.type === 'ice_golem') return Sprites.iceGolemSprites;
+    if (this.type === 'frost_wraith') return Sprites.frostWraithSprites;
+    if (this.type === 'cryomancer') return Sprites.cryomancerSprites;
     return Sprites.skeletonSprites;
   }
 
@@ -426,12 +434,46 @@ Enemy.TYPES = {
     tileH: 2,
   },
   frost_sprite: {
-    hp: 5,
-    speed: 3,
-    chaseRange: 6,
-    damage: 2,
-    attackRate: 1.0,
+    hp: 7,
+    speed: 3.5,
+    chaseRange: 7,
+    damage: 3,
+    attackRate: 0.8,
     xp: 4,
     coinDrop: { min: 3, max: 6 },
+  },
+  ice_golem: {
+    hp: 12,
+    speed: 1.0,
+    chaseRange: 4,
+    damage: 3,
+    attackRate: 1.8,
+    xp: 6,
+    coinDrop: { min: 4, max: 7 },
+    knockbackResist: true,
+  },
+  frost_wraith: {
+    hp: 4,
+    speed: 3.5,
+    chaseRange: 7,
+    damage: 2,
+    attackRate: 0.7,
+    xp: 5,
+    coinDrop: { min: 3, max: 6 },
+    evasionChance: 0.3,
+  },
+  cryomancer: {
+    hp: 5,
+    speed: 1.8,
+    chaseRange: 8,
+    damage: 2,
+    attackRate: 2.5,
+    xp: 6,
+    coinDrop: { min: 4, max: 7 },
+    preferredRange: 4,
+    projectileSpeed: 180,
+    projectileColor: '#6ac8e8',
+    projectileEffect: 'freeze',
+    projectileType: 'staff',
   },
 };

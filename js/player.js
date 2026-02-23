@@ -14,13 +14,17 @@ class Player extends Entity {
     this.rangedCooldown = 0;
     this.hurtTimer = 0;
 
+    // Freeze effect
+    this.freezeTimer = 0;
   }
 
   update(dt) {
-    this.updateMovement(dt, PLAYER_SPEED);
+    const speed = this.freezeTimer > 0 ? PLAYER_SPEED * 0.4 : PLAYER_SPEED;
+    this.updateMovement(dt, speed);
     this.attackCooldown = Math.max(0, this.attackCooldown - dt);
     this.rangedCooldown = Math.max(0, this.rangedCooldown - dt);
     this.hurtTimer = Math.max(0, this.hurtTimer - dt);
+    this.freezeTimer = Math.max(0, this.freezeTimer - dt);
 
     // Handle input: hold key to keep moving tile by tile
     if (!this.moving) {
@@ -46,6 +50,17 @@ class Player extends Entity {
       return;
     }
     super.draw(ctx, camera, Sprites.playerSprites);
+
+    // Blue tint overlay when frozen
+    if (this.freezeTimer > 0) {
+      const ox = this.px - camera.x;
+      const oy = this.py - camera.y;
+      ctx.save();
+      ctx.globalAlpha = 0.35;
+      ctx.fillStyle = '#6ac8e8';
+      ctx.fillRect(ox, oy, TILE, TILE);
+      ctx.restore();
+    }
   }
 
   // Check if player is standing on a door

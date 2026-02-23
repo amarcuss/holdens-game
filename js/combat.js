@@ -51,6 +51,22 @@ const Combat = {
     // Slash effect at the enemy tile
     this.addSlashEffect(player, targetX, targetY);
 
+    // Evasion check
+    const enemyConfig = Enemy.TYPES[closest.type];
+    if (enemyConfig.evasionChance && Math.random() < enemyConfig.evasionChance) {
+      // Evaded! Show MISS text
+      this.effects.push({
+        type: 'damage',
+        x: targetX * TILE + TILE / 2,
+        y: targetY * TILE,
+        timer: 0,
+        duration: 0.8,
+        text: 'MISS',
+        color: '#aaa',
+      });
+      return true;
+    }
+
     const damage = Math.max(1, player.attack);
     closest.takeDamage(damage);
     closest.hurtTimer = 0.3;
@@ -60,6 +76,8 @@ const Combat = {
     this.addHitSparks(targetX, targetY);
 
     // Knockback: push enemy away from player (cardinal only)
+    // Skip if enemy has knockback resistance
+    if (enemyConfig.knockbackResist) return true;
     // Use nearest tile for knockback direction
     let kbDx = Math.sign(nearX - player.tileX);
     let kbDy = Math.sign(nearY - player.tileY);
