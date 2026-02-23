@@ -7,6 +7,24 @@ const ITEMS = {
   chainMail:    { name: 'Chain Mail',    type: 'armor', stat: 3, price: 40, desc: '+3 Defense' },
   plateArmor:   { name: 'Plate Armor',   type: 'armor', stat: 5, price: 80, desc: '+5 Defense' },
   healthPotion: { name: 'Health Potion', type: 'heal',  stat: 3, price: 5,  desc: '+3 HP' },
+
+  // Ranged weapons
+  wizardStaff:  { name: "Wizard's Staff", type: 'staff', stat: 2, desc: '+2 ATK',
+                  range: 6, cooldown: 0.7, projectileSpeed: 180, projectileColor: '#9b59b6', effect: null },
+  hunterBow:    { name: "Hunter's Bow",   type: 'bow',   stat: 2, desc: '+2 ATK',
+                  range: 7, cooldown: 0.6, projectileSpeed: 220, projectileColor: '#8b6914', effect: null },
+
+  // Staff path upgrades (spells)
+  frostbolt:    { name: 'Frostbolt',      type: 'spell', stat: 3, desc: '+3 ATK',
+                  range: 6, cooldown: 0.8, projectileSpeed: 200, projectileColor: '#6ac8e8', effect: 'freeze' },
+  lightning:    { name: 'Lightning',       type: 'spell', stat: 3, desc: '+3 ATK',
+                  range: 8, cooldown: 0.9, projectileSpeed: 300, projectileColor: '#f1c40f', effect: 'pierce' },
+
+  // Bow path upgrades
+  longbow:      { name: 'Longbow',         type: 'bow',   stat: 4, desc: '+4 ATK',
+                  range: 9, cooldown: 0.6, projectileSpeed: 260, projectileColor: '#8b6914', effect: null },
+  fireArrows:   { name: 'Fire Arrows',     type: 'ammo',  stat: 1, desc: '+1 ATK',
+                  range: 7, cooldown: 0.6, projectileSpeed: 220, projectileColor: '#e67e22', effect: 'burn' },
 };
 
 // Shop inventory (keys into ITEMS)

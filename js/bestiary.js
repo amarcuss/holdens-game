@@ -31,6 +31,9 @@ const ALL_TYPES = Object.keys(BESTIARY_DATA);
 const EQUIP_SLOTS = [
   { key: 'sword', label: 'Sword', emptyLabel: 'No sword equipped', color: '#f39c12' },
   { key: 'armor', label: 'Armor', emptyLabel: 'No armor equipped', color: '#3498db' },
+  { key: 'ranged', label: 'Ranged', emptyLabel: 'No ranged weapon', color: '#9b59b6' },
+  { key: 'spell', label: 'Spell', emptyLabel: 'No spell learned', color: '#6ac8e8' },
+  { key: 'ammo', label: 'Ammo', emptyLabel: 'No special ammo', color: '#e67e22' },
 ];
 
 const Bestiary = {
@@ -269,6 +272,27 @@ const Bestiary = {
     }
   },
 
+  _getEquippedKey(slotKey) {
+    if (slotKey === 'sword') return Inventory.equippedSword;
+    if (slotKey === 'armor') return Inventory.equippedArmor;
+    if (slotKey === 'ranged') return Inventory.equippedRanged;
+    if (slotKey === 'spell') return Inventory.equippedSpell;
+    if (slotKey === 'ammo') return Inventory.equippedAmmo;
+    return null;
+  },
+
+  _getEquipSprite(slotKey, itemKey) {
+    const sprites = {
+      wizardStaff: Sprites.staffIcon,
+      hunterBow: Sprites.bowIcon,
+      frostbolt: Sprites.frostboltIcon,
+      lightning: Sprites.lightningIcon,
+      longbow: Sprites.longbowIcon,
+      fireArrows: Sprites.fireArrowsIcon,
+    };
+    return sprites[itemKey] || null;
+  },
+
   _drawEquipmentTab(ctx) {
     const listX = 60;
     const listY = 90;
@@ -279,7 +303,7 @@ const Bestiary = {
       const slot = EQUIP_SLOTS[i];
       const y = listY + i * lineH;
       const selected = i === this.cursor;
-      const equipped = slot.key === 'sword' ? Inventory.equippedSword : Inventory.equippedArmor;
+      const equipped = this._getEquippedKey(slot.key);
 
       if (selected) {
         ctx.fillStyle = 'rgba(212, 160, 23, 0.15)';
@@ -312,7 +336,7 @@ const Bestiary = {
 
     // Right panel: selected slot details
     const slot = EQUIP_SLOTS[this.cursor];
-    const equippedKey = slot.key === 'sword' ? Inventory.equippedSword : Inventory.equippedArmor;
+    const equippedKey = this._getEquippedKey(slot.key);
 
     const detailX = 290;
     const detailY = 90;
@@ -320,34 +344,58 @@ const Bestiary = {
     if (equippedKey) {
       const item = ITEMS[equippedKey];
 
-      // Slot label
+      // Sprite icon if available
+      const sprite = this._getEquipSprite(slot.key, equippedKey);
+      if (sprite) {
+        Sprites.draw(ctx, sprite, detailX + 10, detailY);
+      }
+
+      // Item name
+      const nameX = sprite ? detailX + 50 : detailX;
       ctx.fillStyle = slot.color;
       ctx.font = 'bold 18px monospace';
       ctx.textAlign = 'left';
-      ctx.fillText(item.name, detailX, detailY + 14);
+      ctx.fillText(item.name, nameX, detailY + 14);
 
       // Stat
       ctx.fillStyle = '#aaa';
       ctx.font = '14px monospace';
-      const statLabel = item.type === 'sword' ? 'Attack bonus' : 'Defense bonus';
-      ctx.fillText(statLabel + ': +' + item.stat, detailX, detailY + 40);
+      let statLabel;
+      if (item.type === 'sword') statLabel = 'Attack bonus';
+      else if (item.type === 'armor') statLabel = 'Defense bonus';
+      else statLabel = 'Ranged bonus';
+      ctx.fillText(statLabel + ': +' + item.stat, detailX, detailY + 52);
 
-      // Price paid
-      ctx.fillStyle = COLORS.COIN;
-      ctx.font = '12px monospace';
-      ctx.fillText('Value: ' + item.price + 'c', detailX, detailY + 62);
+      // Price (if shop item)
+      if (item.price) {
+        ctx.fillStyle = COLORS.COIN;
+        ctx.font = '12px monospace';
+        ctx.fillText('Value: ' + item.price + 'c', detailX, detailY + 72);
+      }
+
+      // Effect info for ranged items
+      if (item.effect) {
+        ctx.fillStyle = '#e67e22';
+        ctx.font = '12px monospace';
+        const effectNames = { freeze: 'Freezes enemies', pierce: 'Pierces all enemies', burn: 'Burns over time' };
+        ctx.fillText('Effect: ' + (effectNames[item.effect] || item.effect), detailX, detailY + 92);
+      }
 
       // Description
       ctx.fillStyle = '#ccc';
       ctx.font = '12px monospace';
-      ctx.fillText(item.desc, detailX, detailY + 84);
+      const descY = item.effect ? detailY + 114 : (item.price ? detailY + 92 : detailY + 72);
+      ctx.fillText(item.desc, detailX, descY);
     } else {
       ctx.fillStyle = '#555';
       ctx.font = '16px monospace';
       ctx.textAlign = 'center';
       ctx.fillText(slot.emptyLabel, (270 + CANVAS_W) / 2, CANVAS_H / 2);
       ctx.font = '12px monospace';
-      ctx.fillText('Visit the shop to buy one!', (270 + CANVAS_W) / 2, CANVAS_H / 2 + 24);
+      const hint = (slot.key === 'sword' || slot.key === 'armor')
+        ? 'Visit the shop to buy one!'
+        : 'Defeat a dungeon boss to earn one!';
+      ctx.fillText(hint, (270 + CANVAS_W) / 2, CANVAS_H / 2 + 24);
     }
   },
 

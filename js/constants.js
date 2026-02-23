@@ -108,6 +108,7 @@ const STATE = {
   VICTORY: 'VICTORY',
   CLIFF: 'CLIFF',
   DUNGEON_SELECT: 'DUNGEON_SELECT',
+  REWARD_CHOICE: 'REWARD_CHOICE',
 };
 
 // Available dungeons

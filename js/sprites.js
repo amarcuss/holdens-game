@@ -134,6 +134,9 @@ const Sprites = {
       'R': '#8e44ad', 'P': '#5b2c6f', 'O': COLORS.SHOE, '.': null,
     });
 
+    // --- Weapon sprites ---
+    this._initWeaponSprites();
+
     // --- Book icon ---
     this._initBook();
 
@@ -415,6 +418,142 @@ const Sprites = {
     this.frostSpriteLeft = this.frostSpriteDown;
     this.frostSpriteRight = this.frostSpriteDown;
     this.frostSpriteSprites = [this.frostSpriteUp, this.frostSpriteDown, this.frostSpriteLeft, this.frostSpriteRight];
+  },
+
+  _initWeaponSprites() {
+    // Wizard's Staff: ornate purple gem orb atop a brown shaft
+    this.staffIcon = this._parse([
+      '................',
+      '.....GKKLG......',
+      '....GLPWPLG.....',
+      '....GPWWWPG.....',
+      '....GLPWPLG.....',
+      '.....GLPLG......',
+      '......MMM.......',
+      '......SSS.......',
+      '......SDS.......',
+      '......SSS.......',
+      '......SDS.......',
+      '......SSS.......',
+      '......SDS.......',
+      '......SSS.......',
+      '......DDD.......',
+      '................',
+    ], {
+      'G': '#6a2d8e', 'K': '#e0d0ff', 'L': '#bb6bd9', 'P': '#8e44ad',
+      'W': '#d4bfff', 'M': '#d4a017', 'S': '#9a7030', 'D': '#6b4c12', '.': null,
+    });
+
+    // Bow: smooth D-curve limbs, leather grip, taut string
+    this.bowIcon = this._parse([
+      '................',
+      '.......BTL......',
+      '.....BB..L......',
+      '....BB...L......',
+      '....BB...L......',
+      '....BB...L......',
+      '...BBG...L......',
+      '...BGG...L......',
+      '...BBG...L......',
+      '....BB...L......',
+      '....BB...L......',
+      '....BB...L......',
+      '.....BB..L......',
+      '.......BTL......',
+      '................',
+      '................',
+    ], {
+      'B': '#a07828', 'T': '#c8a050', 'G': '#5a3a1a', 'L': '#c0b8a8', '.': null,
+    });
+
+    // Frostbolt: pointed ice crystal with scattered white sparkles
+    this.frostboltIcon = this._parse([
+      '.......WW.......',
+      '......WLLW......',
+      '......LBBL......',
+      '.....LBWBL......',
+      '.....LBBBL......',
+      '....LBBWBBL.....',
+      '....LBBBWBL.....',
+      '....DBBBBBL.....',
+      '....DBBBWBD.....',
+      '.....DBBBD......',
+      '.....DBBBD......',
+      '......DBBD......',
+      '......DDDD......',
+      '.......DD.......',
+      '................',
+      '................',
+    ], {
+      'B': '#6ac8e8', 'L': '#9ae0f8', 'D': '#4aa0c8', 'W': '#e0f4ff', '.': null,
+    });
+
+    // Lightning: zigzag bolt with highlight edge and shadow edge
+    this.lightningIcon = this._parse([
+      '................',
+      '.........WO.....',
+      '........WYO.....',
+      '.......WYO......',
+      '......WYO.......',
+      '.....WYYYYO.....',
+      '.........YO.....',
+      '........WYO.....',
+      '.......WYO......',
+      '......WYO.......',
+      '.....WYYYYO.....',
+      '........YO......',
+      '.......YO.......',
+      '.......O........',
+      '................',
+      '................',
+    ], {
+      'Y': '#f1c40f', 'W': '#fff8dc', 'O': '#e67e22', '.': null,
+    });
+
+    // Longbow: thick D-curve, dark hardwood, gold-tipped, silver string
+    this.longbowIcon = this._parse([
+      '................',
+      '......MMTL......',
+      '.....BBB.L......',
+      '....BBB..L......',
+      '...BBB...L......',
+      '...BBB...L......',
+      '...BBG...L......',
+      '..BGGG...L......',
+      '...BBG...L......',
+      '...BBB...L......',
+      '...BBB...L......',
+      '....BBB..L......',
+      '.....BBB.L......',
+      '......MMTL......',
+      '................',
+      '................',
+    ], {
+      'B': '#5a3a1a', 'M': '#d4a017', 'T': '#b89030', 'G': '#3a2208', 'L': '#aaa', '.': null,
+    });
+
+    // Fire Arrows: vertical arrow with billowing flame tip
+    this.fireArrowsIcon = this._parse([
+      '................',
+      '.......OY.......',
+      '......OYYO......',
+      '.....ROYYOR.....',
+      '......ROYR......',
+      '.......AA.......',
+      '.......AA.......',
+      '.......SS.......',
+      '.......SS.......',
+      '.......SS.......',
+      '.......SS.......',
+      '......LSSL......',
+      '.....L.SS.L.....',
+      '....L..SS..L....',
+      '................',
+      '................',
+    ], {
+      'Y': '#f1c40f', 'O': '#e67e22', 'R': '#e74c3c',
+      'A': '#bbb', 'S': '#8b6914', 'L': '#c0392b', '.': null,
+    });
   },
 
   _initBook() {

@@ -53,6 +53,19 @@ const HUD = {
       ctx.fillText('DEF:' + player.defense, CANVAS_W / 2 + 50, eqY);
     }
 
+    // Ranged weapon indicator
+    if (Inventory.equippedRanged) {
+      const rangedItem = ITEMS[Inventory.equippedRanged];
+      const dmg = Inventory.getRangedDamage();
+      if (rangedItem.type === 'staff') {
+        ctx.fillStyle = '#9b59b6';
+        ctx.fillText('MAG:' + dmg, CANVAS_W / 2 + 130, eqY);
+      } else {
+        ctx.fillStyle = '#8b6914';
+        ctx.fillText('RNG:' + dmg, CANVAS_W / 2 + 130, eqY);
+      }
+    }
+
     // Book icon
     Bestiary.drawIcon(ctx);
 

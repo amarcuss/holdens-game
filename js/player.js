@@ -11,6 +11,7 @@ class Player extends Entity {
 
     // Combat
     this.attackCooldown = 0;
+    this.rangedCooldown = 0;
     this.hurtTimer = 0;
 
   }
@@ -18,6 +19,7 @@ class Player extends Entity {
   update(dt) {
     this.updateMovement(dt, PLAYER_SPEED);
     this.attackCooldown = Math.max(0, this.attackCooldown - dt);
+    this.rangedCooldown = Math.max(0, this.rangedCooldown - dt);
     this.hurtTimer = Math.max(0, this.hurtTimer - dt);
 
     // Handle input: hold key to keep moving tile by tile

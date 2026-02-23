@@ -33,6 +33,12 @@ class Enemy extends Entity {
     // Hurt flash
     this.hurtTimer = 0;
 
+    // Status effects
+    this.freezeTimer = 0;
+    this.burnTimer = 0;
+    this.burnDamage = 0;
+    this.burnTickTimer = 0;
+
     // Death animation
     this.deathTimer = 0;
     this.deathDuration = 0.4;
@@ -47,6 +53,30 @@ class Enemy extends Entity {
 
     this.hurtTimer = Math.max(0, this.hurtTimer - dt);
     this.attackCooldown = Math.max(0, this.attackCooldown - dt);
+
+    // Burn DOT
+    if (this.burnTimer > 0) {
+      this.burnTimer -= dt;
+      this.burnTickTimer += dt;
+      if (this.burnTickTimer >= 1.0) {
+        this.burnTickTimer -= 1.0;
+        this.takeDamage(this.burnDamage);
+        Combat.addDamageNumber(this.tileX, this.tileY, this.burnDamage, '#e67e22');
+      }
+      if (this.burnTimer <= 0) {
+        this.burnTimer = 0;
+        this.burnDamage = 0;
+        this.burnTickTimer = 0;
+      }
+    }
+
+    // Freeze: skip AI while frozen
+    if (this.freezeTimer > 0) {
+      this.freezeTimer -= dt;
+      this.updateMovement(dt, this.speed);
+      return;
+    }
+
     this.updateMovement(dt, this.speed);
 
     if (this.moving) return;
@@ -317,6 +347,23 @@ class Enemy extends Entity {
     }
 
     super.draw(ctx, camera, this._getSprites());
+
+    // Status effect tint overlay
+    if (this.freezeTimer > 0 || this.burnTimer > 0) {
+      const ox = this.px - camera.x;
+      const oy = this.py - camera.y;
+      const w = this.tileW * TILE;
+      const h = this.tileH * TILE;
+      ctx.save();
+      ctx.globalAlpha = 0.3;
+      if (this.freezeTimer > 0) {
+        ctx.fillStyle = '#6ac8e8';
+      } else {
+        ctx.fillStyle = '#e67e22';
+      }
+      ctx.fillRect(ox, oy, w, h);
+      ctx.restore();
+    }
   }
 
   _getSprite() {

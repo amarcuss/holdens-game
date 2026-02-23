@@ -95,6 +95,14 @@ const Combat = {
     return true;
   },
 
+  // Player fires a ranged projectile in facing direction
+  playerRangedAttack(player) {
+    const config = Inventory.getRangedConfig();
+    if (!config) return false;
+    Projectiles.shootPlayer(player.tileX, player.tileY, player.facing, config);
+    return true;
+  },
+
   // Enemy attacks the player
   enemyAttack(enemy, player) {
     // Invincibility frames: can't take damage while still hurt

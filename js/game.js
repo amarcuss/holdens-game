@@ -47,6 +47,13 @@ class Game {
     // Active dungeon metadata
     this.currentDungeon = DUNGEONS[0];
 
+    // Weapon path: 'staff' or 'bow', set after dungeon 1 reward
+    this.weaponPath = null;
+
+    // Show X key hint once on first ranged weapon acquisition
+    this.showRangedHint = false;
+    this.rangedHintTimer = 0;
+
     this.lastTime = 0;
   }
 
@@ -57,6 +64,9 @@ class Game {
     const startRoom = DungeonMap.getRoom();
     this.player = new Player(startRoom.playerStart.x, startRoom.playerStart.y);
     Inventory.reset();
+    this.weaponPath = null;
+    this.showRangedHint = false;
+    this.rangedHintTimer = 0;
     this.totalCoins = 0;
     this.enemiesSlain = 0;
     this.particles = [];
@@ -78,11 +88,17 @@ class Game {
     const savedCoins = this.player ? this.player.coins : 0;
     const savedSword = Inventory.equippedSword;
     const savedArmor = Inventory.equippedArmor;
+    const savedRanged = Inventory.equippedRanged;
+    const savedSpell = Inventory.equippedSpell;
+    const savedAmmo = Inventory.equippedAmmo;
     this.player = new Player(startRoom.playerStart.x, startRoom.playerStart.y);
     this.player.coins = savedCoins;
     // Reapply equipment stat bonuses
     Inventory.equippedSword = savedSword;
     Inventory.equippedArmor = savedArmor;
+    Inventory.equippedRanged = savedRanged;
+    Inventory.equippedSpell = savedSpell;
+    Inventory.equippedAmmo = savedAmmo;
     this.player.attack = PLAYER_BASE_ATK + Inventory.getAttackBonus();
     this.player.defense = PLAYER_BASE_DEF + Inventory.getDefenseBonus();
     this.totalCoins = 0;
@@ -102,10 +118,16 @@ class Game {
     const savedCoins = this.player ? this.player.coins : 0;
     const savedSword = Inventory.equippedSword;
     const savedArmor = Inventory.equippedArmor;
+    const savedRanged = Inventory.equippedRanged;
+    const savedSpell = Inventory.equippedSpell;
+    const savedAmmo = Inventory.equippedAmmo;
     this.player = new Player(hubRoom.playerStart.x, hubRoom.playerStart.y);
     this.player.coins = savedCoins;
     Inventory.equippedSword = savedSword;
     Inventory.equippedArmor = savedArmor;
+    Inventory.equippedRanged = savedRanged;
+    Inventory.equippedSpell = savedSpell;
+    Inventory.equippedAmmo = savedAmmo;
     this.player.attack = PLAYER_BASE_ATK + Inventory.getAttackBonus();
     this.player.defense = PLAYER_BASE_DEF + Inventory.getDefenseBonus();
     this.particles = [];
@@ -222,13 +244,27 @@ class Game {
       return;
     }
 
+    if (this.state === STATE.REWARD_CHOICE) {
+      Reward.update(dt);
+      return;
+    }
+
     if (this.state === STATE.PLAYING) {
       this.player.update(dt);
 
-      // Player attack
+      // Player melee attack
       if (Input.wasPressed('Space') && this.player.attackCooldown <= 0 && !this.player.moving) {
         this.player.attackCooldown = PLAYER_ATTACK_COOLDOWN;
         Combat.playerAttack(this.player, this.enemies);
+      }
+
+      // Player ranged attack (X key)
+      if (Input.wasPressed('KeyX') && this.player.rangedCooldown <= 0 && Inventory.equippedRanged) {
+        const config = Inventory.getRangedConfig();
+        if (config) {
+          this.player.rangedCooldown = config.cooldown;
+          Combat.playerRangedAttack(this.player);
+        }
       }
 
       // Update enemies
@@ -271,18 +307,11 @@ class Game {
         if (room.enemies && room.enemies.length > 0) {
           this.clearedRooms.add(DungeonMap.currentRoom);
 
-          // Victory: clearing the boss room triggers the ending
+          // Victory: clearing the boss room triggers ending + reward choice
           if (DungeonMap.currentRoom === this.currentDungeon.bossRoom) {
             this.state = STATE.STORY;
             Story.play(this.currentDungeon.endingScene, () => {
-              this.state = STATE.PLAYING;
-              DungeonMap.currentRoom = 15;
-              const cliffRoom = DungeonMap.getRoom();
-              this.player.snapToTile(cliffRoom.playerStart.x, cliffRoom.playerStart.y);
-              this.spawnRoom();
-              Combat.clear();
-              Projectiles.clear();
-              this.camera.snapTo(this.player, cliffRoom.width, cliffRoom.height);
+              this._showBossReward();
             });
             return;
           }
@@ -319,7 +348,7 @@ class Game {
       Combat.update(dt);
 
       // Update projectiles
-      Projectiles.update(dt, this.player);
+      Projectiles.update(dt, this.player, this.enemies);
 
       // Check player took damage (for screen shake)
       if (this.player.hurtTimer > 0.28) {
@@ -332,6 +361,14 @@ class Game {
         this.shake(6, 0.4);
         Combat.clear();
         return;
+      }
+
+      // Ranged hint timer
+      if (this.showRangedHint) {
+        this.rangedHintTimer += dt;
+        if (this.rangedHintTimer >= 4) {
+          this.showRangedHint = false;
+        }
       }
 
       // Bestiary icon glow timer
@@ -347,14 +384,7 @@ class Game {
       if (Input.wasPressed('KeyV')) {
         this.state = STATE.STORY;
         Story.play(this.currentDungeon.endingScene, () => {
-          this.state = STATE.PLAYING;
-          DungeonMap.currentRoom = 15;
-          const cliffRoom = DungeonMap.getRoom();
-          this.player.snapToTile(cliffRoom.playerStart.x, cliffRoom.playerStart.y);
-          this.spawnRoom();
-          Combat.clear();
-          Projectiles.clear();
-          this.camera.snapTo(this.player, cliffRoom.width, cliffRoom.height);
+          this._showBossReward();
         });
         return;
       }
@@ -423,6 +453,103 @@ class Game {
     }
   }
 
+  _teleportToHub() {
+    this.state = STATE.PLAYING;
+    DungeonMap.currentRoom = 15;
+    const cliffRoom = DungeonMap.getRoom();
+    this.player.snapToTile(cliffRoom.playerStart.x, cliffRoom.playerStart.y);
+    this.spawnRoom();
+    Combat.clear();
+    Projectiles.clear();
+    this.camera.snapTo(this.player, cliffRoom.width, cliffRoom.height);
+  }
+
+  _showBossReward() {
+    const bossRoom = this.currentDungeon.bossRoom;
+
+    if (bossRoom === 14) {
+      // Dungeon 1: Choose weapon path
+      this.state = STATE.REWARD_CHOICE;
+      Reward.show('Choose Your Path', [
+        {
+          key: 'wizardStaff',
+          name: "Wizard's Staff",
+          stat: '+2 ATK (Magic)',
+          desc: 'Channel arcane energy. Fires magic bolts at range.',
+          sprite: Sprites.staffIcon,
+        },
+        {
+          key: 'hunterBow',
+          name: 'Hunter\'s Bow',
+          stat: '+2 ATK (Ranged)',
+          desc: 'A sturdy bow. Fires arrows in facing direction.',
+          sprite: Sprites.bowIcon,
+        },
+      ], (chosenKey) => {
+        if (chosenKey === 'wizardStaff') {
+          this.weaponPath = 'staff';
+        } else {
+          this.weaponPath = 'bow';
+        }
+        Inventory.equipRanged(chosenKey);
+        this.showRangedHint = true;
+        this.rangedHintTimer = 0;
+        this._teleportToHub();
+      });
+    } else if (bossRoom === 35) {
+      // Ice dungeon: reward depends on weapon path
+      if (this.weaponPath === 'staff') {
+        this.state = STATE.REWARD_CHOICE;
+        Reward.show('Learn a Spell', [
+          {
+            key: 'frostbolt',
+            name: 'Frostbolt',
+            stat: '+3 ATK',
+            desc: 'Freezes enemies briefly on hit, stopping them in their tracks.',
+            sprite: Sprites.frostboltIcon,
+          },
+          {
+            key: 'lightning',
+            name: 'Lightning',
+            stat: '+3 ATK',
+            desc: 'Pierces through all enemies in a line. Raw destructive power.',
+            sprite: Sprites.lightningIcon,
+          },
+        ], (chosenKey) => {
+          Inventory.equipRanged(chosenKey);
+          this._teleportToHub();
+        });
+      } else if (this.weaponPath === 'bow') {
+        this.state = STATE.REWARD_CHOICE;
+        Reward.show('Upgrade Your Arsenal', [
+          {
+            key: 'longbow',
+            name: 'Longbow',
+            stat: '+4 ATK',
+            desc: 'Greater range and damage. A masterwork weapon.',
+            sprite: Sprites.longbowIcon,
+          },
+          {
+            key: 'fireArrows',
+            name: 'Fire Arrows',
+            stat: '+1 ATK',
+            desc: 'Arrows deal burn damage over time. Enemies smolder.',
+            sprite: Sprites.fireArrowsIcon,
+          },
+        ], (chosenKey) => {
+          Inventory.equipRanged(chosenKey);
+          this._teleportToHub();
+        });
+      } else {
+        // No weapon path set — just teleport
+        this._teleportToHub();
+      }
+    } else {
+      // Unknown boss room — just teleport
+      this._teleportToHub();
+    }
+  }
+
   startTransition(door) {
     this.transitioning = true;
     this.transitionPhase = 'fadeOut';
@@ -487,6 +614,11 @@ class Game {
       return;
     }
 
+    if (this.state === STATE.REWARD_CHOICE) {
+      Reward.draw(ctx);
+      return;
+    }
+
     // Apply screen shake
     ctx.save();
     if (this.shakeTimer > 0) {
@@ -534,6 +666,11 @@ class Game {
         // Shop prompt
         if (this._shopPromptVisible && this.state === STATE.PLAYING) {
           this._drawShopPrompt(ctx);
+        }
+
+        // Ranged weapon hint
+        if (this.showRangedHint && this.state === STATE.PLAYING) {
+          this._drawRangedHint(ctx);
         }
       }
 
@@ -625,7 +762,7 @@ class Game {
     // Controls info
     ctx.fillStyle = '#555';
     ctx.font = '12px monospace';
-    ctx.fillText('Arrows: Move | Space: Attack | Enter: Interact | B: Bestiary', CANVAS_W / 2, 420);
+    ctx.fillText('Arrows: Move | Space: Melee | X: Ranged | Enter: Interact', CANVAS_W / 2, 420);
 
     ctx.textAlign = 'left';
   }
@@ -655,6 +792,26 @@ class Game {
     ctx.fillStyle = COLORS.TEXT;
     ctx.font = '12px monospace';
     ctx.fillText('Press Enter to shop', CANVAS_W / 2, py + 16);
+    ctx.restore();
+  }
+
+  _drawRangedHint(ctx) {
+    const alpha = this.rangedHintTimer < 3.5 ? 1 : 1 - (this.rangedHintTimer - 3.5) / 0.5;
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.textAlign = 'center';
+    ctx.fillStyle = 'rgba(0,0,0,0.7)';
+    const pw = 200;
+    const ph = 24;
+    const px = CANVAS_W / 2 - pw / 2;
+    const py = 50;
+    ctx.fillRect(px, py, pw, ph);
+    ctx.strokeStyle = '#9b59b6';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(px, py, pw, ph);
+    ctx.fillStyle = COLORS.TEXT;
+    ctx.font = '12px monospace';
+    ctx.fillText('Press X to fire ranged weapon!', CANVAS_W / 2, py + 16);
     ctx.restore();
   }
 
