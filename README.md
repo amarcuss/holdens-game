@@ -14,17 +14,22 @@ Open `index.html` in any modern browser, or visit the GitHub Pages link above.
 |-----|--------|
 | Arrow Keys | Move (hold to keep moving) |
 | Space | Attack nearest enemy |
+| X | Fire ranged weapon |
 | Enter | Interact / Start / Restart |
-| Escape | Close shop |
+| B | Open bestiary |
+| M | Open map |
+| Escape | Close menus |
 
 ## Gameplay
 
-- Explore 5 dungeon rooms connected by doors
-- Fight slimes and skeletons — attacks auto-target the nearest adjacent enemy
+- Explore three dungeons: Holden's Dungeon, the Frozen Depths, and the Volcano
+- Fight a variety of enemies — slimes, skeletons, archers, ice golems, flame casters, and more
+- Uncover the story of **The Architect** — a dark sorcerer who built these dungeons as your prison
+- Choose your weapon path after clearing the first dungeon (staff or bow), with upgrades after each boss
 - Collect coins dropped by defeated enemies
-- Visit the shopkeeper in the Treasury to buy swords, armor, and health potions
+- Visit shopkeepers to buy swords, armor, and health potions
 - Cleared rooms stay cleared — no enemy respawns
-- Survive as long as you can
+- Return to the cliff house between dungeons to pick your next challenge
 
 ## Items
 

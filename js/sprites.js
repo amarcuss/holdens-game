@@ -117,6 +117,7 @@ const Sprites = {
     this._initObsidianGuardian();
     this._initFlameCaster();
     this._initVolcanoLord();
+    this._initArchitect();
 
     // --- Shopkeeper sprite ---
     this.shopkeeper = this._parse([
@@ -1083,6 +1084,96 @@ const Sprites = {
     this.volcanoLordLeft = this.volcanoLordDown;
     this.volcanoLordRight = this.volcanoLordDown;
     this.volcanoLordSprites = [this.volcanoLordUp, this.volcanoLordDown, this.volcanoLordLeft, this.volcanoLordRight];
+  },
+
+  _initArchitect() {
+    const pal = {
+      'R': COLORS.ARCHITECT_ROBE, 'L': COLORS.ARCHITECT_ROBE_LIGHT,
+      'H': COLORS.ARCHITECT_HOOD, 'S': COLORS.ARCHITECT_SKIN,
+      'E': COLORS.ARCHITECT_EYE, 'T': '#8b6914', 'D': '#1a0a2a', '.': null,
+    };
+
+    // Facing down: hooded dark sorcerer with staff
+    this.architectDown = this._parse([
+      '......HHHH......',
+      '.....HHHHHH.....',
+      '.....HHSSHH.....',
+      '.....HSESHH.....',
+      '.....HHSSHH.....',
+      '......HHHH......',
+      '.....RRLRRR.....',
+      '....RRLRRRRR.T..',
+      '....RRLRRRRR.T..',
+      '....RR.RR.RR.T..',
+      '....RR.RR.RR.T..',
+      '.......DD....T..',
+      '......DDDD...T..',
+      '......DD.DD.TT..',
+      '......DD.DD.....',
+      '......DD.DD.....',
+    ], pal);
+
+    // Facing up
+    this.architectUp = this._parse([
+      '......HHHH......',
+      '.....HHHHHH.....',
+      '.....HHHHHH.....',
+      '.....HHHHHH.....',
+      '.....HHHHHH.....',
+      '......HHHH......',
+      '.....RRRLRR.....',
+      '..T.RRRLRRRR....',
+      '..T.RRRLRRRR....',
+      '..T.RR.RR.RR....',
+      '..T.RR.RR.RR....',
+      '..T....DD.......',
+      '..T...DDDD......',
+      '..TT.DD.DD......',
+      '.....DD.DD......',
+      '.....DD.DD......',
+    ], pal);
+
+    // Facing left
+    this.architectLeft = this._parse([
+      '......HHHH......',
+      '.....HHHHHH.....',
+      '....SSHHHH......',
+      '....SEHHHH......',
+      '....SSHHHH......',
+      '.....HHH........',
+      '..T.RRLRRR......',
+      '..T.RRLRRRRR....',
+      '..T.RRLRRRRR....',
+      '..T.RRRRRRRR....',
+      '..TT.RRR.RRR....',
+      '.......DDD......',
+      '......DDDD......',
+      '......DD.DD.....',
+      '......DD.DD.....',
+      '......DD.DD.....',
+    ], pal);
+
+    // Facing right
+    this.architectRight = this._parse([
+      '......HHHH......',
+      '.....HHHHHH.....',
+      '......HHHHSS....',
+      '......HHHHES....',
+      '......HHHHSS....',
+      '........HHH.....',
+      '......RRRLRR.T..',
+      '....RRRRRLRR.T..',
+      '....RRRRRLRR.T..',
+      '....RRRRRRRR.T..',
+      '....RRR.RRR.TT..',
+      '......DDD.......',
+      '......DDDD......',
+      '......DD.DD.....',
+      '......DD.DD.....',
+      '......DD.DD.....',
+    ], pal);
+
+    this.architectSprites = [this.architectUp, this.architectDown, this.architectLeft, this.architectRight];
   },
 
   _makeIceFloor() {

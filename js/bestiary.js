@@ -59,6 +59,11 @@ const BESTIARY_DATA = {
     flavor: 'The master of the mountain. A massive demon that splits into lesser imps upon defeat.',
     getSprite() { return Sprites.magmaImpDown; },
   },
+  architect: {
+    name: 'The Architect',
+    flavor: 'An ancient sorcerer who built these dungeons as a prison. Commands freezing violet magic from afar. When defeated, retreats rather than falls — always planning, always watching.',
+    getSprite() { return Sprites.architectDown; },
+  },
 };
 
 const ALL_TYPES = Object.keys(BESTIARY_DATA);

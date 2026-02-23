@@ -305,11 +305,13 @@ class Game {
           this.enemiesSlain++;
           Bestiary.recordKill(enemy.type);
           const config = Enemy.TYPES[enemy.type];
-          const count = config.coinDrop.min +
-            Math.floor(Math.random() * (config.coinDrop.max - config.coinDrop.min + 1));
-          const coinX = enemy.tileX + Math.floor(enemy.tileW / 2);
-          const coinY = enemy.tileY + Math.floor(enemy.tileH / 2);
-          this.coins.push(new Coin(coinX, coinY, count));
+          if (!config.retreats) {
+            const count = config.coinDrop.min +
+              Math.floor(Math.random() * (config.coinDrop.max - config.coinDrop.min + 1));
+            const coinX = enemy.tileX + Math.floor(enemy.tileW / 2);
+            const coinY = enemy.tileY + Math.floor(enemy.tileH / 2);
+            this.coins.push(new Coin(coinX, coinY, count));
+          }
         }
         if (enemy.isDead) {
           // Brute splits into two slimes on death
@@ -424,6 +426,25 @@ class Game {
       if (Input.wasPressed('KeyM')) {
         this.state = STATE.MAP;
         DungeonMapOverlay.show();
+      }
+
+      // DEBUG: press T to teleport to boss room
+      if (Input.wasPressed('KeyT')) {
+        DungeonMap.currentRoom = this.currentDungeon.bossRoom;
+        this.visitedRooms.add(DungeonMap.currentRoom);
+        const room = DungeonMap.getRoom();
+        this.player.snapToTile(room.playerStart.x, room.playerStart.y);
+        this.spawnRoom();
+        Combat.clear();
+        Projectiles.clear();
+        this.camera.snapTo(this.player, room.width, room.height);
+        const sceneKey = ROOM_STORIES[DungeonMap.currentRoom];
+        if (sceneKey && !this.playedScenes.has(sceneKey)) {
+          this.playedScenes.add(sceneKey);
+          this.state = STATE.STORY;
+          Story.play(sceneKey, () => { this.state = STATE.PLAYING; });
+        }
+        return;
       }
 
       // DEBUG: press V to trigger victory

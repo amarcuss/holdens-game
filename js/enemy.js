@@ -387,6 +387,7 @@ class Enemy extends Entity {
     if (this.type === 'obsidian_guardian') return Sprites.obsidianGuardianSprites;
     if (this.type === 'flame_caster') return Sprites.flameCasterSprites;
     if (this.type === 'volcano_lord') return Sprites.volcanoLordSprites;
+    if (this.type === 'architect') return Sprites.architectSprites;
     return Sprites.skeletonSprites;
   }
 
@@ -523,5 +524,20 @@ Enemy.TYPES = {
     coinDrop: { min: 8, max: 15 },
     tileW: 2,
     tileH: 2,
+  },
+  architect: {
+    hp: 18,
+    speed: 2.0,
+    chaseRange: 8,
+    damage: 3,
+    attackRate: 1.8,
+    xp: 10,
+    coinDrop: { min: 5, max: 10 },
+    preferredRange: 4,
+    projectileSpeed: 190,
+    projectileColor: '#9040ff',
+    projectileEffect: 'freeze',
+    projectileType: 'staff',
+    retreats: true,
   },
 };

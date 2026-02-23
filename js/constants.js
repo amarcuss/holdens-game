@@ -147,6 +147,13 @@ const COLORS = {
   VLORD_EYE: '#ffcc00',
   VLORD_HORN: '#ffaa22',
 
+  // The Architect
+  ARCHITECT_ROBE: '#2a1a3a',
+  ARCHITECT_ROBE_LIGHT: '#3a2a5a',
+  ARCHITECT_HOOD: '#1a0a2a',
+  ARCHITECT_EYE: '#bf5fff',
+  ARCHITECT_SKIN: '#c8b8a8',
+
   // UI
   BG: '#1a1a2e',
   TEXT: '#eee',
@@ -194,6 +201,10 @@ const STORY_SCENES = {
       'Only one way out:',
       'forward, into the dungeon.',
     ],
+    [
+      'Somewhere deep, a low hum.',
+      'Like a heartbeat.',
+    ],
   ],
   great_hall: [
     [
@@ -205,6 +216,11 @@ const STORY_SCENES = {
       'Something rattles deeper in.',
       'Bones. Walking bones.',
       'They don\'t seem friendly.',
+    ],
+    [
+      'Words carved in the stone:',
+      '\'YOU WERE NEVER MEANT',
+      'TO WAKE.\'',
     ],
   ],
   treasury: [
@@ -277,7 +293,9 @@ const STORY_SCENES = {
       'from the shadows.',
     ],
     [
-      'No turning back now.',
+      'A whisper from the walls:',
+      '\'My jailer wakes for you.',
+      'How flattering.\'',
     ],
   ],
   ending: [
@@ -296,6 +314,11 @@ const STORY_SCENES = {
       'Wind through the leaves.',
       'A small house between the trees.',
     ],
+    [
+      'A voice, faint, from below:',
+      '\'Unexpected. But there',
+      'are deeper cages.\'',
+    ],
   ],
 
   // --- Frozen Depths stories ---
@@ -313,6 +336,11 @@ const STORY_SCENES = {
     [
       'Your breath hangs white.',
       'Sword ready. Descend.',
+    ],
+    [
+      'Carved in the ice at the',
+      'stair\'s base: \'THE COLD WILL',
+      'FINISH WHAT STONE COULD NOT.\'',
     ],
   ],
   frozen_crossroads: [
@@ -341,8 +369,9 @@ const STORY_SCENES = {
       'a low, resonant note.',
     ],
     [
-      'Something moves inside',
-      'the crystal. Watching.',
+      'A voice: \'You were dangerous',
+      'once. I made sure',
+      'you forgot.\'',
     ],
   ],
   frozen_falls: [
@@ -389,33 +418,37 @@ const STORY_SCENES = {
   frozen_throne: [
     [
       'A vast frozen hall. At its',
-      'center, a throne of black ice.',
+      'center, a figure in dark robes.',
+      'Waiting.',
     ],
     [
-      'The ground shudders.',
-      'The ice cracks. Something',
-      'massive pulls itself free.',
+      '\'You made it this far.',
+      'Impressive. Pointless,',
+      'but impressive.\'',
     ],
     [
-      'The Frozen Depths will',
-      'not let you leave.',
+      'The staff glows violet.',
+      'The air crackles with ice.',
     ],
   ],
   frozen_ending: [
     [
-      'The last shard of ice',
-      'shatters. Warmth floods',
-      'the chamber.',
+      'The Architect stumbles.',
+      'The staff flickers.',
+    ],
+    [
+      '\'This... is not over.',
+      'You remember nothing.',
+      'You ARE nothing.\'',
+    ],
+    [
+      'A flash of violet light.',
+      'The robed figure vanishes.',
     ],
     [
       'The frozen walls begin',
-      'to melt. Water pools at',
-      'your feet.',
-    ],
-    [
-      'You climb the thawing steps,',
-      'back to daylight.',
-      'The cliff house stands warm.',
+      'to thaw. You climb back',
+      'to daylight.',
     ],
   ],
 
@@ -434,6 +467,11 @@ const STORY_SCENES = {
     [
       'Sweat beads on the blade.',
       'Down. Into the heat.',
+    ],
+    [
+      'Burned into the entrance:',
+      '\'HE WAS HERE. HE IS GONE.\'',
+      'The Architect fled this place.',
     ],
   ],
   volcanic_crossroads: [
@@ -515,6 +553,10 @@ const STORY_SCENES = {
       'The air itself burns.',
     ],
     [
+      'No dark robes. No violet light.',
+      'Just fire and fury.',
+    ],
+    [
       'The ground splits open.',
       'A massive figure rises',
       'from the lava.',
@@ -540,6 +582,68 @@ const STORY_SCENES = {
       'The cliff house waits.',
       'The mountain sleeps.',
     ],
+    [
+      'But somewhere, a violet',
+      'light still burns.',
+    ],
+  ],
+
+  // --- Architect storyline scenes ---
+  secret_passage: [
+    [
+      'The walls narrow. Old scratches',
+      'in the stone — fingernails.',
+    ],
+    [
+      'Above the doorframe, carved deep:',
+      '\'NO ONE LEAVES.\'',
+    ],
+  ],
+  the_pit: [
+    [
+      'A chasm yawns beneath a narrow',
+      'bridge. Bones at the bottom.',
+    ],
+    [
+      'Carved into the bridge rail:',
+      '\'I BUILT THIS FOR YOU.\'',
+    ],
+  ],
+  frozen_passage: [
+    [
+      'Ice so thick the walls glow blue.',
+      'A figure is preserved inside —',
+      'armor you almost recognize.',
+    ],
+    [
+      'A voice from the walls:',
+      '\'That was the last one',
+      'who tried.\'',
+    ],
+  ],
+  ice_tomb: [
+    [
+      'A single coffin of black ice.',
+      'The inscription is in a language',
+      'you almost remember.',
+    ],
+    [
+      'The voice, closer now:',
+      '\'Your grave. I carved it',
+      'years ago. You just won\'t',
+      'lie down in it.\'',
+    ],
+  ],
+  lava_corridor: [
+    [
+      'The heat is a physical wall.',
+      'Each breath scorches.',
+    ],
+    [
+      'Burned into the rock:',
+      '\'I WILL RETURN.\'',
+      'The letters still glow.',
+    ],
   ],
 };
 
@@ -548,20 +652,25 @@ const ROOM_STORIES = {
   2: 'great_hall',
   3: 'treasury',
   4: 'depths',
+  5: 'secret_passage',
   6: 'crypt',
   8: 'armory',
+  11: 'the_pit',
   13: 'antechamber',
   14: 'throne',
   // Frozen Depths
   18: 'frozen_crossroads',
   19: 'glacial_hall',
   20: 'crystal_cavern',
+  21: 'frozen_passage',
   24: 'frozen_falls',
   26: 'frost_maze',
+  29: 'ice_tomb',
   31: 'glacial_depths',
   34: 'frostbound_antechamber',
   35: 'frozen_throne',
   // Volcano
+  37: 'lava_corridor',
   38: 'volcanic_crossroads',
   39: 'magma_hall',
   40: 'ember_cavern',

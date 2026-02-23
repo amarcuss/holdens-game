@@ -1522,7 +1522,7 @@ const DungeonMap = {
         { x: 12, y: 5, type: 'frost_wraith' },
         { x: 8, y: 9, type: 'frost_sprite' },
         { x: 12, y: 9, type: 'frost_sprite' },
-        { x: 9, y: 7, type: 'brute' },
+        { x: 9, y: 7, type: 'architect' },
       ],
     };
   },
